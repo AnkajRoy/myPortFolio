@@ -31,7 +31,7 @@ import { ChipModule } from 'primeng/chip';
             </div>
             <div class="about-image">
               <div class="profile-image">
-                <i class="pi pi-user" style="font-size: 6rem; color: var(--primary-color);"></i>
+                <img src="assets/images/profile-image.jpg" alt="Ankaj Kumar" class="about-profile-img">
               </div>
             </div>
           </div>
@@ -217,13 +217,27 @@ import { ChipModule } from 'primeng/chip';
     .profile-image {
       width: 200px;
       height: 200px;
-      background: var(--bg-light);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto;
       box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      border: 4px solid var(--primary-color);
+      position: relative;
+    }
+    
+    .about-profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+    
+    .profile-image:hover .about-profile-img {
+      transform: scale(1.05);
     }
     
     .education-section {
@@ -426,6 +440,23 @@ import { ChipModule } from 'primeng/chip';
       font-size: 0.875rem;
     }
     
+    @media (max-width: 1024px) {
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+      }
+      
+      .about-image {
+        order: -1;
+      }
+      
+      .profile-image {
+        width: 180px;
+        height: 180px;
+      }
+    }
+    
     @media (max-width: 768px) {
       .about-content {
         grid-template-columns: 1fr;
@@ -433,13 +464,47 @@ import { ChipModule } from 'primeng/chip';
       }
       
       .about-title {
-        font-size: 2.5rem;
+        font-size: 2.25rem;
+      }
+      
+      .about-description {
+        font-size: 1rem;
+      }
+      
+      .profile-image {
+        width: 160px;
+        height: 160px;
+      }
+      
+      .about-profile-img {
+        width: 100%;
+        height: 100%;
       }
       
       .role-header {
         flex-direction: column;
         gap: 1rem;
         text-align: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .about-title {
+        font-size: 1.875rem;
+      }
+      
+      .about-description {
+        font-size: 0.9rem;
+      }
+      
+      .profile-image {
+        width: 140px;
+        height: 140px;
+      }
+      
+      .about-profile-img {
+        width: 100%;
+        height: 100%;
       }
     }
   `]
