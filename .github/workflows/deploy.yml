@@ -28,4 +28,5 @@ jobs:
       with:
         personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         publish_dir: ./dist/portfolio-website
+        exclude_assets: node_modules
         cname: # optional, if you want to use a custom domain
