@@ -294,47 +294,127 @@ import { ChipModule } from 'primeng/chip';
     }
     
     .education-section {
-      padding: 4rem 0;
-      background: var(--bg-light);
+      padding: 6rem 0;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      position: relative;
+    }
+    
+    .education-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23e2e8f0" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23e2e8f0" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      opacity: 0.3;
+      pointer-events: none;
     }
     
     .education-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 2.5rem;
+      margin-top: 3rem;
+      position: relative;
+      z-index: 1;
     }
     
     .education-card {
-      border-radius: 12px;
-      box-shadow: var(--shadow-md);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+    
+    .education-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .education-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      border-color: var(--primary-color);
+    }
+    
+    .education-card:hover::before {
+      opacity: 1;
     }
     
     .education-header {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 1.5rem;
-      background: var(--primary-color);
+      gap: 1.25rem;
+      padding: 2rem 2rem 1.5rem 2rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
       color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .education-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      pointer-events: none;
     }
     
     .education-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .education-card:hover .education-icon {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
     }
     
     .education-header h3 {
       margin: 0;
       font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
     }
     
     .education-description {
-      color: var(--text-light);
-      margin-bottom: 1rem;
+      padding: 2rem 2rem 1rem 2rem;
+      color: var(--text-medium);
+      line-height: 1.6;
+      font-size: 1rem;
+      font-weight: 500;
     }
     
     .education-year {
-      font-weight: 600;
+      padding: 0 2rem 2rem 2rem;
       color: var(--primary-color);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
     }
     
     .skills-section {
@@ -617,19 +697,15 @@ export class AboutComponent {
   ];
 
   downloadResume() {
-    // Show the resume link to user
+    // Open Google Drive link directly
     const resumeLink = 'https://drive.google.com/file/d/1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI/view?usp=sharing';
     
-    // Copy to clipboard if possible
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(resumeLink).then(() => {
-        alert('Resume link copied to clipboard! Paste it in your browser to view/download.');
-      }).catch(() => {
-        alert('Please copy this link: ' + resumeLink);
-      });
-    } else {
-      // Fallback for older browsers
-      alert('Please copy this link: ' + resumeLink);
+    // Try to open in new tab
+    const newWindow = window.open(resumeLink, '_blank', 'noopener,noreferrer');
+    
+    // If popup blocked, show alert with link
+    if (!newWindow) {
+      alert('Popup blocked! Please copy this link and open in a new tab:\n\n' + resumeLink);
     }
   }
 }

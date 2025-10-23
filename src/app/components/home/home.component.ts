@@ -815,19 +815,15 @@ export class HomeComponent {
   }
 
   downloadResume() {
-    // Show the resume link to user
+    // Open Google Drive link directly
     const resumeLink = 'https://drive.google.com/file/d/1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI/view?usp=sharing';
     
-    // Copy to clipboard if possible
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(resumeLink).then(() => {
-        alert('Resume link copied to clipboard! Paste it in your browser to view/download.');
-      }).catch(() => {
-        alert('Please copy this link: ' + resumeLink);
-      });
-    } else {
-      // Fallback for older browsers
-      alert('Please copy this link: ' + resumeLink);
+    // Try to open in new tab
+    const newWindow = window.open(resumeLink, '_blank', 'noopener,noreferrer');
+    
+    // If popup blocked, show alert with link
+    if (!newWindow) {
+      alert('Popup blocked! Please copy this link and open in a new tab:\n\n' + resumeLink);
     }
   }
 }
