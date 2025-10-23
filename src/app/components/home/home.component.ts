@@ -543,28 +543,186 @@ import { ChipModule } from 'primeng/chip';
       gap: 0.75rem;
     }
     
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .hero-content {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 3rem;
+        text-align: center;
       }
       
       .hero-title {
-        font-size: 2.5rem;
+        font-size: 3rem;
+      }
+      
+      .hero-description {
+        max-width: 100%;
+        font-size: 1.125rem;
+      }
+      
+      .hero-actions {
+        justify-content: center;
+      }
+      
+      .hero-stats {
+        justify-content: center;
+        gap: 3rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem 0;
+      }
+      
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+      }
+      
+      .hero-title {
+        font-size: 2.25rem;
+        line-height: 1.2;
+      }
+      
+      .hero-subtitle {
+        font-size: 1.25rem;
+      }
+      
+      .hero-description {
+        font-size: 1rem;
+        max-width: 100%;
+        margin-bottom: 2rem;
       }
       
       .hero-actions {
         flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+      }
+      
+      .hero-btn {
+        width: 100%;
+        max-width: 280px;
+        padding: 0.875rem 1.5rem;
       }
       
       .hero-stats {
-        justify-content: space-around;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+      }
+      
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .stat-number {
+        font-size: 1.75rem;
+      }
+      
+      .stat-label {
+        font-size: 0.9rem;
+      }
+      
+      .profile-card {
+        padding: 2rem 1.5rem;
+      }
+      
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .profile-info h3 {
+        font-size: 1.5rem;
+      }
+      
+      .profile-info p {
+        font-size: 1rem;
       }
       
       .section-header {
         flex-direction: column;
         gap: 1rem;
         align-items: flex-start;
+        text-align: left;
+      }
+      
+      .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero-section {
+        padding: 1.5rem 0;
+      }
+      
+      .hero-title {
+        font-size: 1.875rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 1.125rem;
+      }
+      
+      .hero-description {
+        font-size: 0.9rem;
+      }
+      
+      .hero-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+      }
+      
+      .profile-card {
+        padding: 1.5rem 1rem;
+      }
+      
+      .profile-avatar {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .profile-info h3 {
+        font-size: 1.25rem;
+      }
+      
+      .profile-info p {
+        font-size: 0.9rem;
+      }
+      
+      .skill-card {
+        padding: 1.5rem 1rem;
+      }
+      
+      .skill-name {
+        font-size: 1.125rem;
+      }
+      
+      .skill-description {
+        font-size: 0.875rem;
+      }
+      
+      .project-card {
+        padding: 1.5rem 1rem;
+      }
+      
+      .project-title {
+        font-size: 1.125rem;
+      }
+      
+      .project-description {
+        font-size: 0.875rem;
       }
     }
   `]
