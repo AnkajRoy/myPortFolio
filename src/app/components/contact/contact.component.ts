@@ -61,7 +61,7 @@ import { MessageService } from 'primeng/api';
                   </div>
                 </ng-template>
                 <ng-template pTemplate="content">
-                  <p class="info-text">+91 98765 43210</p>
+                  <p class="info-text">+91 9064748813</p>
                   <p class="info-description">Available for calls</p>
                 </ng-template>
               </p-card>
@@ -112,6 +112,10 @@ import { MessageService } from 'primeng/api';
                 <a href="mailto:ankajkumar@email.com" class="social-link email">
                   <i class="pi pi-envelope"></i>
                   <span>Email</span>
+                </a>
+                <a href="tel:+919064748813" class="social-link phone">
+                  <i class="pi pi-phone"></i>
+                  <span>Call</span>
                 </a>
               </div>
             </div>
@@ -441,6 +445,10 @@ import { MessageService } from 'primeng/api';
     
     .social-link.email {
       background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    }
+    
+    .social-link.phone {
+      background: linear-gradient(135deg, #28a745, #20c997);
     }
     
     .social-link:hover {
