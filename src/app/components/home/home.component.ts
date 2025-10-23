@@ -61,7 +61,7 @@ import { ChipModule } from 'primeng/chip';
             <div class="hero-image">
               <div class="profile-card">
                 <div class="profile-avatar">
-                  <i class="pi pi-user" style="font-size: 4rem; color: var(--primary-color);"></i>
+                  <img src="assets/images/profile-image.jpg" alt="Ankaj Kumar" class="profile-image">
                 </div>
                 <div class="profile-info">
                   <h3>Ankaj Kumar</h3>
@@ -263,7 +263,6 @@ import { ChipModule } from 'primeng/chip';
     .profile-avatar {
       width: 140px;
       height: 140px;
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -271,17 +270,20 @@ import { ChipModule } from 'primeng/chip';
       margin: 0 auto 2rem;
       box-shadow: var(--shadow-lg);
       position: relative;
+      overflow: hidden;
+      border: 4px solid var(--primary-color);
     }
     
-    .profile-avatar::before {
-      content: '';
-      position: absolute;
-      inset: 4px;
-      background: var(--bg-primary);
+    .profile-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+    
+    .profile-avatar:hover .profile-image {
+      transform: scale(1.05);
     }
     
     .profile-info h3 {
@@ -636,6 +638,11 @@ import { ChipModule } from 'primeng/chip';
         height: 120px;
       }
       
+      .profile-image {
+        width: 100%;
+        height: 100%;
+      }
+      
       .profile-info h3 {
         font-size: 1.5rem;
       }
@@ -691,6 +698,11 @@ import { ChipModule } from 'primeng/chip';
       .profile-avatar {
         width: 100px;
         height: 100px;
+      }
+      
+      .profile-image {
+        width: 100%;
+        height: 100%;
       }
       
       .profile-info h3 {
