@@ -617,7 +617,17 @@ export class AboutComponent {
   ];
 
   downloadResume() {
-    // Open the Google Drive link in a new tab
-    window.open('https://drive.google.com/file/d/1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI/view?usp=sharing', '_blank');
+    // Create a direct download link for Google Drive
+    const fileId = '1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI';
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    
+    // Create a temporary anchor element to trigger download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = 'Ankaj_Kumar_Resume.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
