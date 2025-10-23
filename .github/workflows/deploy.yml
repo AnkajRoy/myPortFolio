@@ -26,6 +26,6 @@ jobs:
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GH_PAT }}
+        personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         publish_dir: ./dist/portfolio-website
         cname: # optional, if you want to use a custom domain
