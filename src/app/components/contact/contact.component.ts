@@ -1057,17 +1057,34 @@ export class ContactComponent {
   }
 
   downloadResume() {
-    // Create a direct download link for Google Drive
+    // Try multiple approaches for downloading resume
     const fileId = '1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI';
+    
+    // First try: Direct download link
     const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
     
-    // Create a temporary anchor element to trigger download
+    // Create a temporary anchor element
     const link = document.createElement('a');
     link.href = downloadUrl;
     link.download = 'Ankaj_Kumar_Resume.pdf';
     link.target = '_blank';
+    link.style.display = 'none';
     document.body.appendChild(link);
+    
+    // Try to trigger download
     link.click();
-    document.body.removeChild(link);
+    
+    // If download doesn't work, open in new tab after a short delay
+    setTimeout(() => {
+      const viewUrl = `https://drive.google.com/file/d/${fileId}/view?usp=sharing`;
+      window.open(viewUrl, '_blank');
+    }, 1000);
+    
+    // Clean up
+    setTimeout(() => {
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
+    }, 2000);
   }
 }
