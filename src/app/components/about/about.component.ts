@@ -29,6 +29,12 @@ import { ChipModule } from 'primeng/chip';
                 and various frontend libraries. I'm passionate about clean code, user experience, 
                 and staying up-to-date with the latest web technologies.
               </p>
+              <div class="about-actions">
+                <button class="download-btn" (click)="downloadResume()">
+                  <i class="pi pi-download"></i>
+                  Download Resume
+                </button>
+              </div>
             </div>
             <div class="about-image">
               <div class="profile-image">
@@ -213,6 +219,52 @@ import { ChipModule } from 'primeng/chip';
       line-height: 1.7;
       color: var(--text-light);
       margin-bottom: 1.5rem;
+    }
+
+    .about-actions {
+      margin-top: 2rem;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .download-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .download-btn:hover::before {
+      left: 100%;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    .download-btn i {
+      font-size: 1.125rem;
     }
     
     .profile-image {
@@ -563,4 +615,9 @@ export class AboutComponent {
       icon: 'pi pi-lightbulb'
     }
   ];
+
+  downloadResume() {
+    // Open the Google Drive link in a new tab
+    window.open('https://drive.google.com/file/d/1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI/view?usp=sharing', '_blank');
+  }
 }

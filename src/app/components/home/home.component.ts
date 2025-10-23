@@ -36,6 +36,13 @@ import { ChipModule } from 'primeng/chip';
                   class="hero-btn primary">
                 </p-button>
                 <p-button 
+                  label="Download Resume" 
+                  icon="pi pi-download" 
+                  [outlined]="true"
+                  (onClick)="downloadResume()"
+                  class="hero-btn">
+                </p-button>
+                <p-button 
                   label="Get In Touch" 
                   icon="pi pi-envelope" 
                   [outlined]="true"
@@ -805,5 +812,10 @@ export class HomeComponent {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  downloadResume() {
+    // Open the Google Drive link in a new tab
+    window.open('https://drive.google.com/file/d/1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI/view?usp=sharing', '_blank');
   }
 }
