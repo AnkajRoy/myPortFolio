@@ -23,8 +23,9 @@ import { ChipModule } from 'primeng/chip';
                 I specialize in Angular, JavaScript, PrimeNG, and modern web technologies.
               </p>
               <p class="about-description">
-                My journey in web development started with a strong foundation in JavaScript 
-                and has evolved to include expertise in Angular framework, React, Node.js, 
+                I graduated with a Bachelor of Engineering in Information Technology from 
+                University Institute of Technology, Burdwan (2018-2022). My journey in web 
+                development has evolved to include expertise in Angular framework, React, Node.js, 
                 and various frontend libraries. I'm passionate about clean code, user experience, 
                 and staying up-to-date with the latest web technologies.
               </p>
@@ -45,15 +46,15 @@ import { ChipModule } from 'primeng/chip';
               <ng-template pTemplate="header">
                 <div class="education-header">
                   <i class="pi pi-graduation-cap education-icon"></i>
-                  <h3>Master's Degree</h3>
+                  <h3>Bachelor of Engineering</h3>
                 </div>
               </ng-template>
               <ng-template pTemplate="content">
                 <p class="education-description">
-                  Advanced studies in Computer Science with focus on web technologies 
-                  and software engineering principles.
+                  Information Technology from University Institute of Technology, Burdwan. 
+                  Focus on software engineering, web technologies, and system design.
                 </p>
-                <p class="education-year">2020 - 2022</p>
+                <p class="education-year">2018 - 2022</p>
               </ng-template>
             </p-card>
 
