@@ -44,9 +44,12 @@ import { ButtonModule } from 'primeng/button';
               <div class="experience-content">
                 <div class="role-description">
                   <p>
-                    Leading frontend development for critical financial applications, focusing on 
-                    user experience and performance optimization. Working on innovative solutions 
-                    that integrate multiple third-party services and authentication systems.
+                    Leading frontend development for critical financial applications with deep expertise 
+                    in Keycloak authentication and authorization. Developed and owned multiple major 
+                    projects including Connector Onboarding, User Access Management, and private NPM 
+                    libraries. Implemented advanced authentication systems with SSO, OTP login, and 
+                    integrated multiple technologies like DigiLocker, Digio, and eSign for customer 
+                    KYC processes.
                   </p>
                 </div>
                 
@@ -55,23 +58,46 @@ import { ButtonModule } from 'primeng/button';
                   <div class="project-list">
                     <div class="project-item">
                       <h5>Connector Onboarding Portal</h5>
-                      <p>Comprehensive onboarding solution integrating DigiLocker, Digio, and eSign services</p>
+                      <p>Developed and owned comprehensive onboarding solution integrating DigiLocker, Digio, and eSign services for customer KYC processes</p>
                       <div class="project-tech">
                         <p-chip label="Angular" [style]="{'background-color': '#dd0031', 'color': 'white'}"></p-chip>
                         <p-chip label="PrimeNG" [style]="{'background-color': '#007ad9', 'color': 'white'}"></p-chip>
-                        <p-chip label="SSO" [style]="{'background-color': '#28a745', 'color': 'white'}"></p-chip>
-                        <p-chip label="OTP" [style]="{'background-color': '#ffc107', 'color': 'black'}"></p-chip>
+                        <p-chip label="DigiLocker" [style]="{'background-color': '#28a745', 'color': 'white'}"></p-chip>
+                        <p-chip label="Digio" [style]="{'background-color': '#17a2b8', 'color': 'white'}"></p-chip>
+                        <p-chip label="eSign" [style]="{'background-color': '#6f42c1', 'color': 'white'}"></p-chip>
                       </div>
                     </div>
                     
                     <div class="project-item">
-                      <h5>Wealth Transaction Portal</h5>
-                      <p>Financial transaction management system with UAM portal integration</p>
+                      <h5>User Access Management (UAM)</h5>
+                      <p>Developed and managed user access control system with advanced authentication and authorization features</p>
+                      <div class="project-tech">
+                        <p-chip label="Keycloak" [style]="{'background-color': '#ff6b35', 'color': 'white'}"></p-chip>
+                        <p-chip label="SSO" [style]="{'background-color': '#28a745', 'color': 'white'}"></p-chip>
+                        <p-chip label="OTP" [style]="{'background-color': '#ffc107', 'color': 'black'}"></p-chip>
+                        <p-chip label="Angular" [style]="{'background-color': '#dd0031', 'color': 'white'}"></p-chip>
+                      </div>
+                    </div>
+                    
+                    <div class="project-item">
+                      <h5>Private NPM Library</h5>
+                      <p>Created and maintained private NPM package providing OTP login and SSO authentication with Keycloak integration</p>
+                      <div class="project-tech">
+                        <p-chip label="NPM" [style]="{'background-color': '#cb3837', 'color': 'white'}"></p-chip>
+                        <p-chip label="Keycloak" [style]="{'background-color': '#ff6b35', 'color': 'white'}"></p-chip>
+                        <p-chip label="JavaScript" [style]="{'background-color': '#f7df1e', 'color': 'black'}"></p-chip>
+                        <p-chip label="Authentication" [style]="{'background-color': '#6f42c1', 'color': 'white'}"></p-chip>
+                      </div>
+                    </div>
+                    
+                    <div class="project-item">
+                      <h5>SCF Supply Chain Finance</h5>
+                      <p>Developed supply chain finance solutions and upgraded multiple legacy portals for improved performance</p>
                       <div class="project-tech">
                         <p-chip label="Angular" [style]="{'background-color': '#dd0031', 'color': 'white'}"></p-chip>
                         <p-chip label="JavaScript" [style]="{'background-color': '#f7df1e', 'color': 'black'}"></p-chip>
-                        <p-chip label="REST API" [style]="{'background-color': '#6f42c1', 'color': 'white'}"></p-chip>
                         <p-chip label="PrimeNG" [style]="{'background-color': '#007ad9', 'color': 'white'}"></p-chip>
+                        <p-chip label="Legacy Upgrade" [style]="{'background-color': '#17a2b8', 'color': 'white'}"></p-chip>
                       </div>
                     </div>
                     
@@ -795,23 +821,23 @@ export class ExperienceComponent {
       ]
     },
     {
-      name: 'Backend & Tools',
+      name: 'Authentication & Security',
       skills: [
-        { name: 'Node.js', level: 75 },
-        { name: 'Python', level: 70 },
-        { name: 'Java', level: 65 },
-        { name: 'Git', level: 85 },
-        { name: 'Docker', level: 60 }
+        { name: 'Keycloak', level: 90 },
+        { name: 'SSO', level: 85 },
+        { name: 'OTP', level: 80 },
+        { name: 'Authentication', level: 90 },
+        { name: 'Authorization', level: 85 }
       ]
     },
     {
-      name: 'Frameworks & Libraries',
+      name: 'Integration & APIs',
       skills: [
-        { name: 'React', level: 75 },
-        { name: 'RxJS', level: 80 },
-        { name: 'Bootstrap', level: 85 },
-        { name: 'Webpack', level: 70 },
-        { name: 'Jest', level: 75 }
+        { name: 'DigiLocker', level: 80 },
+        { name: 'Digio', level: 75 },
+        { name: 'eSign', level: 75 },
+        { name: 'NPM', level: 85 },
+        { name: 'REST API', level: 80 }
       ]
     }
   ];
