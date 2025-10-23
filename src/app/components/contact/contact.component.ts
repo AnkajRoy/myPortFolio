@@ -272,52 +272,111 @@ import { MessageService } from 'primeng/api';
     .contact-content {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      padding: 5rem 0;
-      background: var(--bg-secondary);
+      gap: 4rem;
+      padding: 4rem 0;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      position: relative;
+    }
+    
+    .contact-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23e2e8f0" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23e2e8f0" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      opacity: 0.3;
+      pointer-events: none;
     }
     
     .contact-info {
       display: flex;
       flex-direction: column;
-      gap: 3rem;
+      gap: 2.5rem;
+      position: relative;
+      z-index: 1;
     }
     
     .section-title {
-      font-size: 2rem;
+      font-size: 2.25rem;
       font-weight: 700;
       color: var(--text-dark);
-      margin-bottom: 2rem;
-      letter-spacing: -0.01em;
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.02em;
+      position: relative;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: 2px;
     }
     
     .info-cards {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 2rem;
+      gap: 1.5rem;
     }
     
     .info-card {
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border-light);
-      transition: all 0.3s ease;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       overflow: hidden;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+    
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
     
     .info-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      border-color: var(--primary-color);
+    }
+    
+    .info-card:hover::before {
+      opacity: 1;
     }
     
     .info-header {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 2rem;
+      gap: 1.25rem;
+      padding: 2rem 2rem 1.5rem 2rem;
       background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
       color: white;
       position: relative;
+      overflow: hidden;
+    }
+    
+    .info-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      pointer-events: none;
     }
     
     .info-header::after {
@@ -331,14 +390,29 @@ import { MessageService } from 'primeng/api';
     }
     
     .info-icon {
-      font-size: 1.75rem;
-      opacity: 0.9;
+      width: 56px;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .info-card:hover .info-icon {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
     }
     
     .info-header h3 {
       margin: 0;
       font-size: 1.25rem;
       font-weight: 600;
+      letter-spacing: -0.01em;
     }
     
     .info-text {
@@ -346,20 +420,23 @@ import { MessageService } from 'primeng/api';
       font-weight: 700;
       color: var(--text-dark);
       margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
     }
     
     .info-description {
-      color: var(--text-light);
+      color: var(--text-medium);
       font-size: 1rem;
-      line-height: 1.5;
+      line-height: 1.6;
+      font-weight: 500;
     }
     
     .social-section {
-      background: var(--bg-primary);
-      border-radius: var(--radius-xl);
-      padding: 3rem 2rem;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border-light);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(20px);
       position: relative;
       overflow: hidden;
     }
@@ -385,7 +462,7 @@ import { MessageService } from 'primeng/api';
     .social-links {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
     
     .social-link {
@@ -393,12 +470,13 @@ import { MessageService } from 'primeng/api';
       flex-direction: column;
       align-items: center;
       padding: 2rem 1.5rem;
-      border-radius: var(--radius-lg);
+      border-radius: 16px;
       text-decoration: none;
-      transition: all 0.4s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       color: white;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
     
     .social-link::before {
@@ -408,7 +486,7 @@ import { MessageService } from 'primeng/api';
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
       opacity: 0;
       transition: opacity 0.3s ease;
     }
@@ -418,7 +496,7 @@ import { MessageService } from 'primeng/api';
     }
     
     .social-link i {
-      font-size: 2rem;
+      font-size: 2.25rem;
       margin-bottom: 0.75rem;
       position: relative;
       z-index: 1;
@@ -459,18 +537,33 @@ import { MessageService } from 'primeng/api';
     .contact-form-section {
       display: flex;
       flex-direction: column;
+      position: relative;
+      z-index: 1;
     }
     
     .form-card {
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       overflow: hidden;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      position: relative;
+    }
+    
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     }
     
     .contact-form {
       padding: 3rem 3rem 2rem 3rem;
-      background: var(--bg-primary);
+      background: transparent;
     }
     
     .form-row {
@@ -495,6 +588,7 @@ import { MessageService } from 'primeng/api';
       color: var(--text-dark);
       margin-bottom: 0.75rem;
       font-size: 1rem;
+      letter-spacing: -0.01em;
     }
     
     .form-group label[for="name"],
@@ -506,26 +600,28 @@ import { MessageService } from 'primeng/api';
     .form-textarea {
       width: 100%;
       padding: 1rem 1.25rem;
-      border: 2px solid var(--border-light);
-      border-radius: var(--radius-md);
+      border: 2px solid rgba(226, 232, 240, 0.8);
+      border-radius: 12px;
       font-size: 1rem;
-      transition: all 0.3s ease;
-      background: var(--bg-primary);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255, 255, 255, 0.9);
       color: var(--text-dark);
+      backdrop-filter: blur(10px);
     }
     
     .form-input:focus,
     .form-textarea:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-      transform: translateY(-1px);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 1);
     }
     
     .form-input.p-invalid,
     .form-textarea.p-invalid {
       border-color: #ef4444;
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
     }
     
     .error-message {
@@ -548,34 +644,52 @@ import { MessageService } from 'primeng/api';
       border: none;
       color: white;
       font-weight: 600;
-      padding: 1rem 2rem;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      transition: all 0.3s ease;
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       font-size: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .submit-btn:hover::before {
+      left: 100%;
     }
     
     .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
     }
     
     .reset-btn {
       color: var(--primary-color);
       border: 2px solid var(--primary-color);
-      background: transparent;
+      background: rgba(255, 255, 255, 0.9);
       font-weight: 600;
-      padding: 1rem 2rem;
-      border-radius: var(--radius-md);
-      transition: all 0.3s ease;
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       font-size: 1rem;
+      backdrop-filter: blur(10px);
     }
     
     .reset-btn:hover {
       background: var(--primary-color);
       color: white;
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
     }
     
     .faq-section {
