@@ -1057,7 +1057,19 @@ export class ContactComponent {
   }
 
   downloadResume() {
-    // Simple approach: Open Google Drive link in new tab
-    window.open('https://drive.google.com/file/d/1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI/view?usp=sharing', '_blank');
+    // Show the resume link to user
+    const resumeLink = 'https://drive.google.com/file/d/1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI/view?usp=sharing';
+    
+    // Copy to clipboard if possible
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(resumeLink).then(() => {
+        alert('Resume link copied to clipboard! Paste it in your browser to view/download.');
+      }).catch(() => {
+        alert('Please copy this link: ' + resumeLink);
+      });
+    } else {
+      // Fallback for older browsers
+      alert('Please copy this link: ' + resumeLink);
+    }
   }
 }
