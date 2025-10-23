@@ -612,14 +612,35 @@ import { MessageService } from 'primeng/api';
       font-size: 1rem;
     }
     
+    @media (max-width: 1024px) {
+      .contact-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      
+      .info-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+      
+      .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+    
     @media (max-width: 768px) {
       .page-title {
-        font-size: 2.75rem;
+        font-size: 2.25rem;
+      }
+      
+      .page-subtitle {
+        font-size: 1rem;
       }
       
       .contact-content {
         grid-template-columns: 1fr;
-        gap: 3rem;
+        gap: 2.5rem;
       }
       
       .info-cards {
@@ -627,23 +648,60 @@ import { MessageService } from 'primeng/api';
         gap: 1.5rem;
       }
       
+      .info-card {
+        padding: 1.5rem;
+        text-align: center;
+      }
+      
+      .info-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+      }
+      
+      .info-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+      }
+      
+      .info-text h4 {
+        font-size: 1.125rem;
+      }
+      
+      .info-description {
+        font-size: 0.9rem;
+      }
+      
+      .social-links {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        justify-items: center;
+      }
+      
+      .social-link {
+        width: 100%;
+        max-width: 200px;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .contact-form {
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+      }
+      
       .form-row {
         grid-template-columns: 1fr;
         gap: 1rem;
       }
       
-      .form-actions {
-        flex-direction: column;
-        gap: 1rem;
+      .form-group label {
+        font-size: 0.9rem;
       }
       
-      .social-links {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      
-      .contact-form {
-        padding: 2rem 2rem 1.5rem 2rem;
+      .form-input, .form-textarea {
+        font-size: 0.9rem;
+        padding: 0.75rem;
       }
       
       .form-actions {
@@ -652,9 +710,99 @@ import { MessageService } from 'primeng/api';
         margin-top: 1.5rem;
       }
       
-      .hero-actions {
-        flex-direction: column;
-        gap: 1rem;
+      .submit-btn, .reset-btn {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .faq-card {
+        padding: 1.5rem;
+      }
+      
+      .faq-question {
+        font-size: 1rem;
+      }
+      
+      .faq-answer {
+        font-size: 0.9rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 1.875rem;
+      }
+      
+      .page-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .contact-content {
+        gap: 2rem;
+      }
+      
+      .info-card {
+        padding: 1.25rem;
+      }
+      
+      .info-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.125rem;
+      }
+      
+      .info-text h4 {
+        font-size: 1rem;
+      }
+      
+      .info-description {
+        font-size: 0.85rem;
+      }
+      
+      .social-links {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      
+      .social-link {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.85rem;
+      }
+      
+      .contact-form {
+        padding: 1.5rem 1rem 1rem 1rem;
+      }
+      
+      .form-group label {
+        font-size: 0.85rem;
+      }
+      
+      .form-input, .form-textarea {
+        font-size: 0.85rem;
+        padding: 0.625rem;
+      }
+      
+      .submit-btn, .reset-btn {
+        padding: 0.75rem 0.875rem;
+        font-size: 0.85rem;
+      }
+      
+      .faq-card {
+        padding: 1.25rem;
+      }
+      
+      .faq-question {
+        font-size: 0.9rem;
+      }
+      
+      .faq-answer {
+        font-size: 0.85rem;
       }
     }
   `]

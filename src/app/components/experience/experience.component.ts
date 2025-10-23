@@ -528,20 +528,229 @@ import { ButtonModule } from 'primeng/button';
       font-size: 0.875rem;
     }
     
-    @media (max-width: 768px) {
-      .page-title {
-        font-size: 2.5rem;
-      }
-      
+    @media (max-width: 1024px) {
       .experience-header-card {
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.5rem;
         text-align: center;
       }
       
       .company-info {
         flex-direction: column;
         text-align: center;
+        gap: 1rem;
+      }
+      
+      .expertise-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .certifications-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2.25rem;
+      }
+      
+      .page-subtitle {
+        font-size: 1rem;
+      }
+      
+      .experience-header-card {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 2rem 1.5rem;
+      }
+      
+      .company-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+      }
+      
+      .company-name {
+        font-size: 1.5rem;
+      }
+      
+      .company-role {
+        font-size: 1.125rem;
+      }
+      
+      .company-duration {
+        font-size: 0.9rem;
+      }
+      
+      .current-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+      }
+      
+      .company-description {
+        font-size: 0.9rem;
+        text-align: left;
+      }
+      
+      .achievements {
+        margin-top: 1.5rem;
+      }
+      
+      .achievements li {
+        font-size: 0.875rem;
+        padding: 0.2rem 0;
+      }
+      
+      .technologies {
+        justify-content: center;
+        gap: 0.4rem;
+      }
+      
+      .expertise-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .expertise-category {
+        padding: 1.5rem;
+      }
+      
+      .category-title {
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+      }
+      
+      .skill-level {
+        margin-bottom: 1rem;
+      }
+      
+      .skill-name {
+        font-size: 0.9rem;
+      }
+      
+      .skill-percentage {
+        font-size: 0.85rem;
+      }
+      
+      .certifications-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .cert-card {
+        margin-bottom: 1rem;
+      }
+      
+      .cert-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .cert-title {
+        font-size: 1.125rem;
+      }
+      
+      .cert-year {
+        font-size: 0.875rem;
+      }
+      
+      .cert-body {
+        padding: 1.5rem;
+      }
+      
+      .cert-description {
+        font-size: 0.9rem;
+      }
+      
+      .cert-actions {
+        margin-top: 1rem;
+      }
+      
+      .cert-btn {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 1.875rem;
+      }
+      
+      .page-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .experience-header-card {
+        padding: 1.5rem 1rem;
+      }
+      
+      .company-name {
+        font-size: 1.25rem;
+      }
+      
+      .company-role {
+        font-size: 1rem;
+      }
+      
+      .company-duration {
+        font-size: 0.8rem;
+      }
+      
+      .company-description {
+        font-size: 0.85rem;
+      }
+      
+      .achievements li {
+        font-size: 0.8rem;
+      }
+      
+      .expertise-category {
+        padding: 1rem;
+      }
+      
+      .category-title {
+        font-size: 1rem;
+      }
+      
+      .skill-name {
+        font-size: 0.85rem;
+      }
+      
+      .skill-percentage {
+        font-size: 0.8rem;
+      }
+      
+      .cert-header {
+        padding: 1rem;
+      }
+      
+      .cert-title {
+        font-size: 1rem;
+      }
+      
+      .cert-year {
+        font-size: 0.8rem;
+      }
+      
+      .cert-body {
+        padding: 1rem;
+      }
+      
+      .cert-description {
+        font-size: 0.85rem;
+      }
+      
+      .cert-btn {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.8rem;
       }
     }
   `]
