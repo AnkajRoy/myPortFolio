@@ -471,27 +471,129 @@ import { GalleriaModule } from 'primeng/galleria';
       font-size: 0.875rem;
     }
     
+    @media (max-width: 1024px) {
+      .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+      }
+      
+      .project-card {
+        margin-bottom: 2rem;
+      }
+    }
+    
     @media (max-width: 768px) {
       .page-title {
-        font-size: 2.5rem;
+        font-size: 2.25rem;
+      }
+      
+      .page-subtitle {
+        font-size: 1rem;
       }
       
       .projects-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
       }
       
       .category-filters {
         justify-content: flex-start;
         overflow-x: auto;
         padding-bottom: 1rem;
+        gap: 0.75rem;
+      }
+      
+      .category-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+      }
+      
+      .project-card {
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+      }
+      
+      .project-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .project-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+      }
+      
+      .project-title {
+        font-size: 1.25rem;
+      }
+      
+      .project-description {
+        font-size: 0.9rem;
+      }
+      
+      .project-tech {
+        justify-content: center;
+        gap: 0.5rem;
       }
       
       .project-actions {
         flex-direction: column;
+        gap: 1rem;
       }
       
       .project-links {
         flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .view-btn, .link-btn {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 1.875rem;
+      }
+      
+      .page-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .projects-grid {
+        gap: 1rem;
+      }
+      
+      .project-card {
+        padding: 1.25rem;
+      }
+      
+      .project-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.125rem;
+      }
+      
+      .project-title {
+        font-size: 1.125rem;
+      }
+      
+      .project-description {
+        font-size: 0.85rem;
+      }
+      
+      .project-tech {
+        gap: 0.4rem;
+      }
+      
+      .view-btn, .link-btn {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.8rem;
       }
     }
   `]

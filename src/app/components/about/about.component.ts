@@ -588,6 +588,16 @@ import { ChipModule } from 'primeng/chip';
         width: 180px;
         height: 180px;
       }
+      
+      .education-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .education-card {
+        margin: 0 auto;
+        max-width: 500px;
+      }
     }
     
     @media (max-width: 768px) {
@@ -619,6 +629,46 @@ import { ChipModule } from 'primeng/chip';
         gap: 1rem;
         text-align: center;
       }
+      
+      .education-section {
+        padding: 4rem 0;
+      }
+      
+      .education-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+      
+      .education-card {
+        margin: 0;
+        max-width: 100%;
+      }
+      
+      .education-header {
+        padding: 1.5rem;
+        gap: 1rem;
+      }
+      
+      .education-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+      }
+      
+      .education-header h3 {
+        font-size: 1.125rem;
+      }
+      
+      .education-description {
+        padding: 1.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .education-year {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+        font-size: 0.9rem;
+      }
     }
     
     @media (max-width: 480px) {
@@ -638,6 +688,41 @@ import { ChipModule } from 'primeng/chip';
       .about-profile-img {
         width: 100%;
         height: 100%;
+      }
+      
+      .education-section {
+        padding: 3rem 0;
+      }
+      
+      .education-grid {
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      
+      .education-header {
+        padding: 1.25rem;
+        gap: 0.75rem;
+      }
+      
+      .education-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      
+      .education-header h3 {
+        font-size: 1rem;
+      }
+      
+      .education-description {
+        padding: 1.25rem;
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+      
+      .education-year {
+        padding: 0 1.25rem 1.25rem 1.25rem;
+        font-size: 0.85rem;
       }
     }
   `]
