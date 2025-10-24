@@ -42,17 +42,8 @@ import { GalleriaModule } from 'primeng/galleria';
           <div class="project-card" *ngFor="let project of filteredProjects">
             <p-card class="project-card-content">
               <ng-template pTemplate="header">
-                <div class="project-image">
+                <div class="project-image" (click)="showProjectDetails(project)">
                   <i [class]="project.icon" class="project-icon"></i>
-                  <div class="project-overlay">
-                    <p-button 
-                      icon="pi pi-eye" 
-                      [rounded]="true" 
-                      [outlined]="true"
-                      (onClick)="showProjectDetails(project)"
-                      class="view-btn">
-                    </p-button>
-                  </div>
                 </div>
               </ng-template>
               <ng-template pTemplate="content">
@@ -269,35 +260,18 @@ import { GalleriaModule } from 'primeng/galleria';
       align-items: center;
       justify-content: center;
       border-radius: 12px 12px 0 0;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .project-image:hover {
+      transform: scale(1.02);
+      box-shadow: var(--shadow-lg);
     }
     
     .project-icon {
       font-size: 4rem;
       color: white;
-    }
-    
-    .project-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      border-radius: 12px 12px 0 0;
-    }
-    
-    .project-card-content:hover .project-overlay {
-      opacity: 1;
-    }
-    
-    .view-btn {
-      background: white;
-      color: var(--primary-color);
     }
     
     .project-content {
@@ -374,59 +348,90 @@ import { GalleriaModule } from 'primeng/galleria';
     }
     
     .project-details {
-      padding: 1rem;
+      padding: 0;
+      max-height: 70vh;
+      overflow-y: auto;
     }
     
     .details-header {
       margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-light);
+      background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-white) 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
     }
     
     .details-header h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text-dark);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
       margin-bottom: 0.5rem;
+      line-height: 1.2;
     }
     
     .project-category {
       color: var(--text-light);
+      font-size: 1.1rem;
       margin-bottom: 1rem;
+      font-weight: 500;
+    }
+    
+    .details-content {
+      padding: 0 1.5rem 1.5rem;
     }
     
     .details-section {
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
+      background: var(--bg-white);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
     }
     
     .details-section h3 {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       font-weight: 600;
       color: var(--text-dark);
       margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary-color);
+      display: inline-block;
     }
     
     .details-section p {
       color: var(--text-light);
-      line-height: 1.6;
+      line-height: 1.7;
+      font-size: 1rem;
     }
     
     .tech-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      margin-top: 1rem;
     }
     
     .features-list {
       list-style: none;
       padding: 0;
+      margin-top: 1rem;
     }
     
     .features-list li {
-      padding: 0.5rem 0;
+      padding: 0.75rem 0;
       color: var(--text-light);
       position: relative;
-      padding-left: 1.5rem;
+      padding-left: 2rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .features-list li:last-child {
+      border-bottom: none;
     }
     
     .features-list li::before {
@@ -435,40 +440,64 @@ import { GalleriaModule } from 'primeng/galleria';
       left: 0;
       color: var(--primary-color);
       font-weight: bold;
+      font-size: 1.1rem;
+      top: 0.75rem;
     }
     
     .challenges {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.5rem;
+      margin-top: 1rem;
     }
     
     .challenge-item {
-      background: var(--bg-light);
-      padding: 1rem;
-      border-radius: 8px;
+      background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-white) 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary-color);
+      box-shadow: var(--shadow-sm);
     }
     
     .challenge-item h4 {
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: var(--text-dark);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
     
     .challenge-item p {
       color: var(--text-light);
       margin: 0;
+      line-height: 1.6;
     }
     
     .project-links {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
+      margin-top: 1rem;
     }
     
     .link-btn {
-      font-size: 0.875rem;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    
+    /* Dark theme styles */
+    .dark-theme .details-header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    }
+    
+    .dark-theme .details-section {
+      background: var(--bg-secondary);
+      border-color: var(--border-light);
+    }
+    
+    .dark-theme .challenge-item {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
     }
     
     @media (max-width: 1024px) {
@@ -554,6 +583,88 @@ import { GalleriaModule } from 'primeng/galleria';
         padding: 0.75rem 1rem;
         font-size: 0.875rem;
       }
+      
+      /* Modal responsive styles */
+      .project-details {
+        max-height: 80vh;
+        padding: 0;
+      }
+      
+      .details-header {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .details-header h2 {
+        font-size: 1.5rem;
+        line-height: 1.3;
+      }
+      
+      .project-category {
+        font-size: 1rem;
+      }
+      
+      .details-content {
+        padding: 0 1rem 1rem;
+      }
+      
+      .details-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .details-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .details-section p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      
+      .tech-list {
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+      }
+      
+      .features-list li {
+        padding: 0.5rem 0;
+        font-size: 0.9rem;
+        padding-left: 1.5rem;
+      }
+      
+      .features-list li::before {
+        font-size: 1rem;
+        top: 0.5rem;
+      }
+      
+      .challenge-item {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .challenge-item h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .challenge-item p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+      
+      .project-links {
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+      }
+      
+      .link-btn {
+        width: 100%;
+        font-size: 0.85rem;
+        padding: 0.75rem 1rem;
+      }
     }
     
     @media (max-width: 480px) {
@@ -594,6 +705,85 @@ import { GalleriaModule } from 'primeng/galleria';
       .view-btn, .link-btn {
         padding: 0.625rem 0.875rem;
         font-size: 0.8rem;
+      }
+      
+      /* Mobile modal styles */
+      .project-details {
+        max-height: 85vh;
+      }
+      
+      .details-header {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      
+      .details-header h2 {
+        font-size: 1.25rem;
+        line-height: 1.2;
+      }
+      
+      .project-category {
+        font-size: 0.9rem;
+      }
+      
+      .details-content {
+        padding: 0 0.75rem 0.75rem;
+      }
+      
+      .details-section {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      
+      .details-section h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .details-section p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+      
+      .tech-list {
+        gap: 0.4rem;
+        margin-top: 0.5rem;
+      }
+      
+      .features-list li {
+        padding: 0.4rem 0;
+        font-size: 0.85rem;
+        padding-left: 1.25rem;
+      }
+      
+      .features-list li::before {
+        font-size: 0.9rem;
+        top: 0.4rem;
+      }
+      
+      .challenge-item {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .challenge-item h4 {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+      }
+      
+      .challenge-item p {
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+      
+      .project-links {
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      
+      .link-btn {
+        font-size: 0.8rem;
+        padding: 0.6rem 0.8rem;
       }
     }
   `]
