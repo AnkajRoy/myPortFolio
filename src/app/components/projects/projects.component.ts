@@ -111,9 +111,10 @@ import { GalleriaModule } from 'primeng/galleria';
         <p-dialog 
           [(visible)]="showDetailsDialog" 
           [modal]="true" 
-          [style]="{width: '90vw', maxWidth: '800px'}"
+          [style]="{width: '90vw', maxWidth: '800px', maxHeight: '90vh'}"
           [closable]="true"
-          header="Project Details">
+          header="Project Details"
+          [styleClass]="'project-modal'">
           <div class="project-details" *ngIf="selectedProject">
             <div class="details-header">
               <div class="project-info">
@@ -348,7 +349,7 @@ import { GalleriaModule } from 'primeng/galleria';
     }
     
     .project-details {
-      padding: 0;
+      padding: 0 0 0 1rem;
       max-height: 70vh;
       overflow-y: auto;
     }
@@ -500,6 +501,38 @@ import { GalleriaModule } from 'primeng/galleria';
       background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
     }
     
+    /* Modal styling to fix double scrollbar */
+    :host ::ng-deep .project-modal .p-dialog-content {
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    :host ::ng-deep .project-modal .p-dialog {
+      overflow: hidden;
+    }
+    
+    :host ::ng-deep .project-modal .p-dialog-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+      border-bottom: 2px solid var(--border-light);
+    }
+    
+    :host ::ng-deep .project-modal .p-dialog-header .p-dialog-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0;
+    }
+    
+    /* Dark theme for modal */
+    .dark-theme :host ::ng-deep .project-modal .p-dialog-header {
+      background: var(--bg-secondary);
+      border-bottom-color: var(--border-light);
+    }
+    
+    .dark-theme :host ::ng-deep .project-modal .p-dialog-header .p-dialog-title {
+      color: var(--text-dark);
+    }
+    
     @media (max-width: 1024px) {
       .projects-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -587,7 +620,16 @@ import { GalleriaModule } from 'primeng/galleria';
       /* Modal responsive styles */
       .project-details {
         max-height: 80vh;
-        padding: 0;
+        padding: 0 0 0 0.75rem;
+      }
+      
+      /* Mobile modal header */
+      :host ::ng-deep .project-modal .p-dialog-header {
+        padding: 1rem 1rem 0.75rem 1rem;
+      }
+      
+      :host ::ng-deep .project-modal .p-dialog-header .p-dialog-title {
+        font-size: 1.25rem;
       }
       
       .details-header {
@@ -710,6 +752,16 @@ import { GalleriaModule } from 'primeng/galleria';
       /* Mobile modal styles */
       .project-details {
         max-height: 85vh;
+        padding: 0 0 0 0.5rem;
+      }
+      
+      /* Small mobile modal header */
+      :host ::ng-deep .project-modal .p-dialog-header {
+        padding: 0.75rem 0.75rem 0.5rem 0.75rem;
+      }
+      
+      :host ::ng-deep .project-modal .p-dialog-header .p-dialog-title {
+        font-size: 1.1rem;
       }
       
       .details-header {
