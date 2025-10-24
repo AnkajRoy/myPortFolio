@@ -223,6 +223,8 @@ import { ChipModule } from 'primeng/chip';
 
     .about-actions {
       margin-top: 2rem;
+      display: flex;
+      justify-content: center;
     }
 
     .download-btn {
@@ -630,6 +632,16 @@ import { ChipModule } from 'primeng/chip';
         text-align: center;
       }
       
+      .about-actions {
+        justify-content: center;
+      }
+      
+      .download-btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+      }
+      
       .education-section {
         padding: 4rem 0;
       }
@@ -688,6 +700,18 @@ import { ChipModule } from 'primeng/chip';
       .about-profile-img {
         width: 100%;
         height: 100%;
+      }
+      
+      .about-actions {
+        justify-content: center;
+      }
+      
+      .download-btn {
+        width: 100%;
+        max-width: 260px;
+        justify-content: center;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
       }
       
       .education-section {
