@@ -1,820 +1,338 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
-import { TagModule } from 'primeng/tag';
-import { TimelineModule } from 'primeng/timeline';
-import { ChipModule } from 'primeng/chip';
+import { RouterModule } from '@angular/router';
+import { PROFILE, SKILL_GROUPS, EDUCATION, ACHIEVEMENTS } from '../../shared/resume.data';
+import { ResumeService } from '../../shared/resume.service';
+import { RevealOnScrollDirective } from '../../shared/reveal-on-scroll.directive';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, CardModule, TagModule, TimelineModule, ChipModule],
+  imports: [CommonModule, RouterModule, RevealOnScrollDirective],
   template: `
-    <div class="about-container">
-      <div class="container">
-        <!-- About Hero -->
-        <section class="about-hero">
-          <div class="about-content">
-            <div class="about-text">
-              <h1 class="about-title">About Me</h1>
-              <p class="about-description">
-                I'm a passionate Frontend Developer with 3.5 years of experience creating 
-                exceptional user experiences. Currently working at Incred Financial Services, 
-                I specialize in Angular, JavaScript, PrimeNG, and modern web technologies.
-              </p>
-              <p class="about-description">
-                I graduated with a Bachelor of Engineering in Information Technology from 
-                University Institute of Technology, Burdwan (2018-2022). My journey in web 
-                development has evolved to include expertise in Angular framework, React, Node.js, 
-                and various frontend libraries. I'm passionate about clean code, user experience, 
-                and staying up-to-date with the latest web technologies.
-              </p>
-              <div class="about-actions">
-                <button class="download-btn" (click)="downloadResume()">
-                  <i class="pi pi-download"></i>
-                  Download Resume
-                </button>
-              </div>
-            </div>
-            <div class="about-image">
-              <div class="profile-image">
-                <img src="assets/images/profile-image.jpg" alt="Ankaj Kumar" class="about-profile-img">
-              </div>
-            </div>
+    <!-- Intro -->
+    <section class="intro section">
+      <div class="container intro-grid">
+        <div class="intro-text" appReveal>
+          <p class="kicker">About me</p>
+          <h1>I build production fintech software.</h1>
+          <p class="lede">
+            I'm Ankaj — a Frontend Engineer at InCred Financial Services with {{ profile.yearsExperience }} years of experience
+            designing and shipping web applications that real teams depend on. My focus is Angular 18, but I'm equally comfortable
+            in NestJS, TypeScript, and the auth layer that ties them together.
+          </p>
+          <p>
+            I care about clean architecture, accessible UI, and shipping the boring 80% that makes a product reliable. The favorite
+            thing I've built so far is a private npm authentication package that replaced Auth0 across our portals and cut annual
+            licensing costs significantly.
+          </p>
+          <div class="intro-actions">
+            <button class="btn primary" type="button" (click)="resume.open()">
+              <i class="pi pi-download" aria-hidden="true"></i> Download Resume
+            </button>
+            <a class="btn outline" routerLink="/contact">
+              <i class="pi pi-envelope" aria-hidden="true"></i> Get in touch
+            </a>
           </div>
-        </section>
-
-        <!-- Education & Certifications -->
-        <section class="education-section">
-          <h2 class="section-title">Education & Certifications</h2>
-          <div class="education-grid">
-            <p-card class="education-card">
-              <ng-template pTemplate="header">
-                <div class="education-header">
-                  <i class="pi pi-graduation-cap education-icon"></i>
-                  <h3>Bachelor of Engineering</h3>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="content">
-                <p class="education-description">
-                  Information Technology from University Institute of Technology, Burdwan. 
-                  Focus on software engineering, web technologies, and system design.
-                </p>
-                <p class="education-year">2018 - 2022</p>
-              </ng-template>
-            </p-card>
-
-            <p-card class="education-card">
-              <ng-template pTemplate="header">
-                <div class="education-header">
-                  <i class="pi pi-certificate education-icon"></i>
-                  <h3>Angular Certification</h3>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="content">
-                <p class="education-description">
-                  Certified Angular Developer with expertise in Angular framework, 
-                  TypeScript, and modern frontend development practices.
-                </p>
-                <p class="education-year">2023</p>
-              </ng-template>
-            </p-card>
-
-            <p-card class="education-card">
-              <ng-template pTemplate="header">
-                <div class="education-header">
-                  <i class="pi pi-code education-icon"></i>
-                  <h3>JavaScript Mastery</h3>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="content">
-                <p class="education-description">
-                  Advanced JavaScript and ES6+ features, modern development patterns, 
-                  and best practices for scalable applications.
-                </p>
-                <p class="education-year">2022</p>
-              </ng-template>
-            </p-card>
+        </div>
+        <div class="intro-image" appReveal [revealDelay]="120">
+          <div class="frame">
+            <img src="assets/images/profile-image.jpg" alt="Portrait of Ankaj Kumar" loading="lazy">
           </div>
-        </section>
-
-        <!-- Skills & Technologies -->
-        <section class="skills-section">
-          <h2 class="section-title">Technical Skills</h2>
-          <div class="skills-categories">
-            <div class="skill-category">
-              <h3 class="category-title">Frontend Technologies</h3>
-              <div class="skills-list">
-                <p-chip 
-                  *ngFor="let skill of frontendSkills" 
-                  [label]="skill.name" 
-                  [style]="{'background-color': skill.color, 'color': 'white'}">
-                </p-chip>
-              </div>
-            </div>
-
-            <div class="skill-category">
-              <h3 class="category-title">Backend & Tools</h3>
-              <div class="skills-list">
-                <p-chip 
-                  *ngFor="let skill of backendSkills" 
-                  [label]="skill.name" 
-                  [style]="{'background-color': skill.color, 'color': 'white'}">
-                </p-chip>
-              </div>
-            </div>
-
-            <div class="skill-category">
-              <h3 class="category-title">Libraries & Frameworks</h3>
-              <div class="skills-list">
-                <p-chip 
-                  *ngFor="let skill of frameworkSkills" 
-                  [label]="skill.name" 
-                  [style]="{'background-color': skill.color, 'color': 'white'}">
-                </p-chip>
-              </div>
-            </div>
+          <div class="quick-facts">
+            <div><span class="label">Role</span><span class="value">Software Engineer</span></div>
+            <div><span class="label">At</span><span class="value">InCred Financial Services</span></div>
+            <div><span class="label">Since</span><span class="value">{{ profile.startedAt }}</span></div>
+            <div><span class="label">Based in</span><span class="value">{{ profile.location }}</span></div>
           </div>
-        </section>
-
-        <!-- Current Role -->
-        <section class="current-role">
-          <h2 class="section-title">Current Role</h2>
-          <p-card class="role-card">
-            <ng-template pTemplate="header">
-              <div class="role-header">
-                <div class="company-info">
-                  <h3>Incred Financial Services</h3>
-                  <p class="role-title">Frontend Software Engineer</p>
-                  <p class="role-duration">2023 - Present</p>
-                </div>
-                <div class="company-logo">
-                  <i class="pi pi-building" style="font-size: 2rem; color: var(--primary-color);"></i>
-                </div>
-              </div>
-            </ng-template>
-            <ng-template pTemplate="content">
-              <div class="role-description">
-                <p>
-                  Leading frontend development for critical financial applications including 
-                  connector onboarding portal and wealth transaction systems. Integrated advanced 
-                  features like DigiLocker, Digio, eSign, and UAM portal authentication.
-                </p>
-                <div class="role-achievements">
-                  <h4>Key Achievements:</h4>
-                  <ul>
-                    <li>Developed private NPM package for SSO authentication</li>
-                    <li>Integrated multiple third-party services (DigiLocker, Digio, eSign)</li>
-                    <li>Implemented OTP-based login and authorization systems</li>
-                    <li>Optimized application performance and user experience</li>
-                  </ul>
-                </div>
-              </div>
-            </ng-template>
-          </p-card>
-        </section>
-
-        <!-- Personal Interests -->
-        <section class="interests-section">
-          <h2 class="section-title">Beyond Code</h2>
-          <div class="interests-grid">
-            <div class="interest-item" *ngFor="let interest of interests">
-              <div class="interest-icon">
-                <i [class]="interest.icon"></i>
-              </div>
-              <h4 class="interest-title">{{ interest.title }}</h4>
-              <p class="interest-description">{{ interest.description }}</p>
-            </div>
-          </div>
-        </section>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Education -->
+    <section class="education section">
+      <div class="container">
+        <header class="section-head" appReveal>
+          <p class="kicker">Education</p>
+          <h2 class="section-title">Where I learned the fundamentals</h2>
+        </header>
+        <article class="edu-card" appReveal>
+          <div class="edu-icon"><i class="pi pi-graduation-cap" aria-hidden="true"></i></div>
+          <div>
+            <h3>{{ education.degree }}</h3>
+            <p class="institute">{{ education.institute }}</p>
+            <div class="edu-meta">
+              <span><i class="pi pi-calendar" aria-hidden="true"></i> Graduated {{ education.year }}</span>
+              <span><i class="pi pi-chart-bar" aria-hidden="true"></i> CGPA {{ education.cgpa }}</span>
+            </div>
+            <p class="edu-blurb">
+              Focus on software engineering, web technologies, data structures, and algorithms — foundation for the
+              {{ achievements[1].title.toLowerCase() }} I've worked through since.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="skills section">
+      <div class="container">
+        <header class="section-head" appReveal>
+          <p class="kicker">What I work with</p>
+          <h2 class="section-title">Skills &amp; tooling</h2>
+          <p class="section-subtitle">Grouped by area of focus. No vanity percentages — just an honest read of what I use.</p>
+        </header>
+        <div class="skill-groups">
+          <article class="skill-group"
+                   *ngFor="let g of skillGroups; let i = index"
+                   appReveal
+                   [revealDelay]="i * 80">
+            <h3 class="group-title">{{ g.title }}</h3>
+            <ul class="chips">
+              <li *ngFor="let s of g.skills">{{ s }}</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Beyond code -->
+    <section class="beyond section">
+      <div class="container">
+        <header class="section-head" appReveal>
+          <p class="kicker">Beyond code</p>
+          <h2 class="section-title">A few things outside the editor</h2>
+        </header>
+        <div class="beyond-grid">
+          <div class="beyond-card" *ngFor="let item of interests; let i = index" appReveal [revealDelay]="i * 80">
+            <span class="beyond-icon"><i [class]="item.icon" aria-hidden="true"></i></span>
+            <h4>{{ item.title }}</h4>
+            <p>{{ item.description }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
   `,
   styles: [`
-    .about-container {
-      padding: 2rem 0;
+    /* ===== Intro ===== */
+    .intro {
+      background:
+        radial-gradient(50% 80% at 90% 10%, color-mix(in srgb, var(--primary-color) 12%, transparent), transparent 60%),
+        var(--bg-primary);
     }
-    
-    .about-hero {
-      padding: 4rem 0;
-      background: var(--bg-white);
-    }
-    
-    .about-content {
+    .intro-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 4rem;
+      grid-template-columns: 1.4fr 1fr;
+      gap: clamp(2rem, 4vw, 4rem);
       align-items: center;
     }
-    
-    .about-title {
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 1.5rem;
+    .intro-text h1 {
+      font-size: clamp(2rem, 4vw + 1rem, 3.25rem);
+      margin-bottom: 1rem;
     }
-    
-    .about-description {
-      font-size: 1.125rem;
-      line-height: 1.7;
-      color: var(--text-light);
-      margin-bottom: 1.5rem;
-    }
-
-    .about-actions {
-      margin-top: 2rem;
+    .lede { font-size: clamp(1rem, 0.5vw + 0.875rem, 1.125rem); color: var(--text-medium); }
+    .intro-actions {
       display: flex;
-      justify-content: center;
-    }
-
-    .download-btn {
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
-      display: flex;
-      align-items: center;
       gap: 0.75rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .download-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .download-btn:hover::before {
-      left: 100%;
-    }
-
-    .download-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
-    }
-
-    .download-btn i {
-      font-size: 1.125rem;
-    }
-    
-    .profile-image {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-      border: 4px solid var(--primary-color);
-      position: relative;
-    }
-    
-    .about-profile-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-      transition: transform 0.3s ease;
-    }
-    
-    .profile-image:hover .about-profile-img {
-      transform: scale(1.05);
-    }
-    
-    .education-section {
-      padding: 6rem 0;
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      position: relative;
-    }
-    
-    .education-section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23e2e8f0" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23e2e8f0" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-      opacity: 0.3;
-      pointer-events: none;
-    }
-    
-    .education-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-      gap: 2.5rem;
-      margin-top: 3rem;
-      position: relative;
-      z-index: 1;
-    }
-    
-    .education-card {
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      position: relative;
-    }
-    
-    .education-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .education-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-      border-color: var(--primary-color);
-    }
-    
-    .education-card:hover::before {
-      opacity: 1;
-    }
-    
-    .education-header {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      padding: 2rem 2rem 1.5rem 2rem;
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-      color: white;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .education-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-      pointer-events: none;
-    }
-    
-    .education-icon {
-      width: 56px;
-      height: 56px;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
-    }
-    
-    .education-card:hover .education-icon {
-      background: rgba(255, 255, 255, 0.25);
-      transform: scale(1.1);
-    }
-    
-    .education-header h3 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    
-    .education-description {
-      padding: 2rem 2rem 1rem 2rem;
-      color: var(--text-medium);
-      line-height: 1.6;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    
-    .education-year {
-      padding: 0 2rem 2rem 2rem;
-      color: var(--primary-color);
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: -0.01em;
-    }
-    
-    .skills-section {
-      padding: 4rem 0;
-      background: var(--bg-white);
-    }
-    
-    .skills-categories {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-    
-    .skill-category {
-      background: var(--bg-white);
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--border-color);
-    }
-    
-    .category-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      color: var(--text-dark);
-    }
-    
-    .skills-list {
-      display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      margin-top: 1.5rem;
     }
-    
-    .current-role {
-      padding: 4rem 0;
-      background: var(--bg-light);
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.4rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      min-height: 44px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
     }
-    
-    .role-card {
-      border-radius: 12px;
+    .btn.primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn.primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn.outline { color: var(--primary-color); border-color: var(--primary-color); background: var(--bg-primary); }
+    .btn.outline:hover { background: var(--primary-color); color: #fff; }
+
+    .intro-image { position: relative; }
+    .frame {
+      position: relative;
+      width: min(100%, 320px);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      border-radius: 20px;
+      overflow: hidden;
       box-shadow: var(--shadow-lg);
+      transform: rotate(-1.5deg);
     }
-    
-    .role-header {
+    .frame::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      z-index: -1;
+      border-radius: 24px;
+      transform: rotate(3deg);
+    }
+    .frame img { width: 100%; height: 100%; object-fit: cover; }
+
+    .quick-facts {
+      margin: 1.25rem auto 0;
+      max-width: 320px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      gap: 0.5rem;
+    }
+    .quick-facts > div {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 2rem;
-      background: var(--primary-color);
-      color: white;
-    }
-    
-    .company-info h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .role-title {
-      font-size: 1.125rem;
-      margin-bottom: 0.5rem;
-      opacity: 0.9;
-    }
-    
-    .role-duration {
       font-size: 0.875rem;
-      opacity: 0.8;
     }
-    
-    .role-description {
-      padding: 2rem;
-    }
-    
-    .role-description p {
-      font-size: 1.125rem;
-      line-height: 1.7;
-      color: var(--text-light);
-      margin-bottom: 1.5rem;
-    }
-    
-    .role-achievements h4 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--text-dark);
-    }
-    
-    .role-achievements ul {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .role-achievements li {
-      padding: 0.5rem 0;
-      color: var(--text-light);
-      position: relative;
-      padding-left: 1.5rem;
-    }
-    
-    .role-achievements li::before {
-      content: '✓';
-      position: absolute;
-      left: 0;
+    .quick-facts .label { color: var(--text-light); }
+    .quick-facts .value { color: var(--text-dark); font-weight: 600; }
+
+    /* ===== Section heads ===== */
+    .section-head { text-align: center; margin-bottom: clamp(2rem, 4vw, 3rem); }
+    .kicker {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
       color: var(--primary-color);
-      font-weight: bold;
-    }
-    
-    .interests-section {
-      padding: 4rem 0;
-      background: var(--bg-white);
-    }
-    
-    .interests-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-    }
-    
-    .interest-item {
-      text-align: center;
-      padding: 2rem;
-      background: var(--bg-light);
-      border-radius: 12px;
-      transition: transform 0.3s ease;
-    }
-    
-    .interest-item:hover {
-      transform: translateY(-4px);
-    }
-    
-    .interest-icon {
-      width: 60px;
-      height: 60px;
-      background: var(--accent-color);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-    }
-    
-    .interest-icon i {
-      font-size: 1.5rem;
-      color: white;
-    }
-    
-    .interest-title {
-      font-size: 1.125rem;
-      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
       margin-bottom: 0.5rem;
-      color: var(--text-dark);
     }
-    
-    .interest-description {
+
+    /* ===== Education ===== */
+    .education { background: var(--bg-secondary); }
+    .edu-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      max-width: 720px;
+      margin: 0 auto;
+      box-shadow: var(--shadow-sm);
+    }
+    .edu-icon {
+      width: 64px; height: 64px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+    .institute { color: var(--text-medium); font-weight: 600; margin-bottom: 0.5rem; }
+    .edu-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
       color: var(--text-light);
       font-size: 0.875rem;
     }
-    
-    @media (max-width: 1024px) {
-      .about-content {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-        text-align: center;
-      }
-      
-      .about-image {
-        order: -1;
-      }
-      
-      .profile-image {
-        width: 180px;
-        height: 180px;
-      }
-      
-      .education-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      
-      .education-card {
-        margin: 0 auto;
-        max-width: 500px;
-      }
+    .edu-meta i { color: var(--primary-color); margin-right: 0.25rem; }
+    .edu-blurb { color: var(--text-light); margin: 0; }
+
+    /* ===== Skills ===== */
+    .skills { background: var(--bg-primary); }
+    .skill-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(1rem, 2vw, 1.5rem);
     }
-    
-    @media (max-width: 768px) {
-      .about-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      
-      .about-title {
-        font-size: 2.25rem;
-      }
-      
-      .about-description {
-        font-size: 1rem;
-      }
-      
-      .profile-image {
-        width: 160px;
-        height: 160px;
-      }
-      
-      .about-profile-img {
-        width: 100%;
-        height: 100%;
-      }
-      
-      .role-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-      }
-      
-      .about-actions {
-        justify-content: center;
-      }
-      
-      .download-btn {
-        width: 100%;
-        max-width: 280px;
-        justify-content: center;
-      }
-      
-      .education-section {
-        padding: 4rem 0;
-      }
-      
-      .education-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        margin-top: 2rem;
-      }
-      
-      .education-card {
-        margin: 0;
-        max-width: 100%;
-      }
-      
-      .education-header {
-        padding: 1.5rem;
-        gap: 1rem;
-      }
-      
-      .education-icon {
-        width: 48px;
-        height: 48px;
-        font-size: 1.25rem;
-      }
-      
-      .education-header h3 {
-        font-size: 1.125rem;
-      }
-      
-      .education-description {
-        padding: 1.5rem;
-        font-size: 0.9rem;
-      }
-      
-      .education-year {
-        padding: 0 1.5rem 1.5rem 1.5rem;
-        font-size: 0.9rem;
-      }
+    .skill-group {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
-    
+    .skill-group:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .group-title {
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+    .chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chips li {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      color: var(--text-medium);
+    }
+
+    /* ===== Beyond code ===== */
+    .beyond { background: var(--bg-secondary); }
+    .beyond-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: clamp(1rem, 2vw, 1.5rem);
+    }
+    .beyond-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .beyond-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .beyond-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+      color: var(--primary-color);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+      margin-bottom: 0.75rem;
+    }
+    .beyond-card h4 { margin-bottom: 0.35rem; font-size: 1.05rem; }
+    .beyond-card p { color: var(--text-light); font-size: 0.9rem; margin: 0; }
+
+    @media (max-width: 900px) {
+      .intro-grid { grid-template-columns: 1fr; text-align: center; }
+      .intro-actions { justify-content: center; }
+      .intro-image { order: -1; }
+      .edu-card { grid-template-columns: 1fr; text-align: center; }
+      .edu-icon { margin: 0 auto; }
+      .edu-meta { justify-content: center; }
+    }
     @media (max-width: 480px) {
-      .about-title {
-        font-size: 1.875rem;
-      }
-      
-      .about-description {
-        font-size: 0.9rem;
-      }
-      
-      .profile-image {
-        width: 140px;
-        height: 140px;
-      }
-      
-      .about-profile-img {
-        width: 100%;
-        height: 100%;
-      }
-      
-      .about-actions {
-        justify-content: center;
-      }
-      
-      .download-btn {
-        width: 100%;
-        max-width: 260px;
-        justify-content: center;
-        padding: 0.875rem 1.5rem;
-        font-size: 0.9rem;
-      }
-      
-      .education-section {
-        padding: 3rem 0;
-      }
-      
-      .education-grid {
-        gap: 1rem;
-        margin-top: 1.5rem;
-      }
-      
-      .education-header {
-        padding: 1.25rem;
-        gap: 0.75rem;
-      }
-      
-      .education-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-      }
-      
-      .education-header h3 {
-        font-size: 1rem;
-      }
-      
-      .education-description {
-        padding: 1.25rem;
-        font-size: 0.85rem;
-        line-height: 1.5;
-      }
-      
-      .education-year {
-        padding: 0 1.25rem 1.25rem 1.25rem;
-        font-size: 0.85rem;
-      }
+      .btn { width: 100%; justify-content: center; }
     }
   `]
 })
 export class AboutComponent {
-  frontendSkills = [
-    { name: 'Angular', color: '#dd0031' },
-    { name: 'JavaScript', color: '#f7df1e' },
-    { name: 'TypeScript', color: '#3178c6' },
-    { name: 'HTML5', color: '#e34f26' },
-    { name: 'CSS3', color: '#1572b6' },
-    { name: 'SCSS', color: '#cf649a' },
-    { name: 'PrimeNG', color: '#007ad9' },
-    { name: 'React', color: '#61dafb' }
-  ];
-
-  backendSkills = [
-    { name: 'Node.js', color: '#339933' },
-    { name: 'Python', color: '#3776ab' },
-    { name: 'Java', color: '#007396' },
-    { name: 'REST APIs', color: '#ff6b6b' },
-    { name: 'Git', color: '#f05032' },
-    { name: 'Docker', color: '#2496ed' },
-    { name: 'NPM', color: '#cb3837' }
-  ];
-
-  frameworkSkills = [
-    { name: 'Angular Material', color: '#ff4081' },
-    { name: 'Bootstrap', color: '#7952b3' },
-    { name: 'RxJS', color: '#b7178c' },
-    { name: 'Webpack', color: '#8dd6f9' },
-    { name: 'Jest', color: '#c21325' },
-    { name: 'Karma', color: '#0c9d58' }
-  ];
+  readonly profile = PROFILE;
+  readonly skillGroups = SKILL_GROUPS;
+  readonly education = EDUCATION;
+  readonly achievements = ACHIEVEMENTS;
+  readonly resume = inject(ResumeService);
 
   interests = [
-    {
-      title: 'Open Source',
-      description: 'Contributing to open source projects and sharing knowledge',
-      icon: 'pi pi-github'
-    },
-    {
-      title: 'Tech Blogging',
-      description: 'Writing about web development and sharing experiences',
-      icon: 'pi pi-book'
-    },
-    {
-      title: 'Mentoring',
-      description: 'Helping junior developers grow their skills',
-      icon: 'pi pi-users'
-    },
-    {
-      title: 'Learning',
-      description: 'Always exploring new technologies and frameworks',
-      icon: 'pi pi-lightbulb'
-    }
+    { title: 'Competitive Programming', icon: 'pi pi-bolt',
+      description: '500+ DSA problems on LeetCode, GFG, and CodeChef. Global Rank 440 in Newton Coding Contest.' },
+    { title: 'Open Source',            icon: 'pi pi-github',
+      description: 'Building internal libraries and exploring open-source projects I rely on every day.' },
+    { title: 'Knowledge Sharing',      icon: 'pi pi-comments',
+      description: 'Internal tech talks, hackathons, and onboarding sessions for new engineers on my team.' },
+    { title: 'Continuous Learning',    icon: 'pi pi-book',
+      description: 'Always exploring patterns, language features, and tools that improve how I build software.' }
   ];
-
-  downloadResume() {
-    // Open Google Drive link directly
-    const resumeLink = 'https://drive.google.com/file/d/1qK2AMZEpe5Jw-v-Yh-lj9DTm4ytTJceI/view?usp=sharing';
-    
-    // Try to open in new tab
-    const newWindow = window.open(resumeLink, '_blank', 'noopener,noreferrer');
-    
-    // If popup blocked, show alert with link
-    if (!newWindow) {
-      alert('Popup blocked! Please copy this link and open in a new tab:\n\n' + resumeLink);
-    }
-  }
 }

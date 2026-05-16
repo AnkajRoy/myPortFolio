@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { PROFILE, SKILL_GROUPS } from '../../shared/resume.data';
+import { ResumeService } from '../../shared/resume.service';
 
 @Component({
   selector: 'app-footer',
@@ -9,279 +11,170 @@ import { RouterModule } from '@angular/router';
   template: `
     <footer class="footer">
       <div class="container">
-        <div class="footer-content">
-          <div class="footer-section">
-            <h3 class="footer-title">Ankaj Kumar</h3>
-            <p class="footer-description">
-              Frontend Developer with 3.5 years of experience in Angular, JavaScript, PrimeNG, and modern web technologies.
+        <div class="footer-grid">
+          <section class="brand">
+            <h3 class="brand-title">{{ profile.name }}</h3>
+            <p class="brand-tagline">{{ profile.tagline }}</p>
+            <p class="brand-summary">
+              {{ profile.yearsExperience }} years building production-grade fintech web applications.
+              Open to interesting frontend and full-stack opportunities.
             </p>
-            <div class="social-links">
-              <a href="https://www.linkedin.com/in/ankaj-ray/" target="_blank" class="social-link">
-                <i class="pi pi-linkedin"></i>
+            <div class="social">
+              <a [href]="profile.linkedin" target="_blank" rel="noopener" class="social-link linkedin" aria-label="LinkedIn">
+                <i class="pi pi-linkedin" aria-hidden="true"></i>
               </a>
-              <a href="https://github.com/AnkajRoy" target="_blank" class="social-link">
-                <i class="pi pi-github"></i>
+              <a [href]="profile.github" target="_blank" rel="noopener" class="social-link github" aria-label="GitHub">
+                <i class="pi pi-github" aria-hidden="true"></i>
               </a>
-              <a href="mailto:ankajkumar@email.com" class="social-link">
-                <i class="pi pi-envelope"></i>
+              <a [href]="profile.leetcode" target="_blank" rel="noopener" class="social-link leetcode" aria-label="LeetCode">
+                <i class="pi pi-code" aria-hidden="true"></i>
+              </a>
+              <a [href]="'mailto:' + profile.email" class="social-link email" aria-label="Email">
+                <i class="pi pi-envelope" aria-hidden="true"></i>
               </a>
             </div>
-          </div>
-          
-          <div class="footer-section">
-            <h4 class="footer-subtitle">Quick Links</h4>
-            <ul class="footer-links">
-              <li><a routerLink="/about" class="footer-link">About</a></li>
-              <li><a routerLink="/experience" class="footer-link">Experience</a></li>
-              <li><a routerLink="/projects" class="footer-link">Projects</a></li>
-              <li><a routerLink="/contact" class="footer-link">Contact</a></li>
+          </section>
+
+          <section>
+            <h4 class="col-title">Navigate</h4>
+            <ul class="links">
+              <li><a routerLink="/">Home</a></li>
+              <li><a routerLink="/about">About</a></li>
+              <li><a routerLink="/experience">Experience</a></li>
+              <li><a routerLink="/projects">Projects</a></li>
+              <li><a routerLink="/contact">Contact</a></li>
+              <li><button class="link-btn" type="button" (click)="resume.open()">Download Resume</button></li>
             </ul>
-          </div>
-          
-          <div class="footer-section">
-            <h4 class="footer-subtitle">Skills</h4>
-            <div class="skills-tags">
-              <span class="skill-tag">Angular</span>
-              <span class="skill-tag">JavaScript</span>
-              <span class="skill-tag">PrimeNG</span>
-              <span class="skill-tag">React</span>
-              <span class="skill-tag">Node.js</span>
-              <span class="skill-tag">TypeScript</span>
+          </section>
+
+          <section>
+            <h4 class="col-title">Core Stack</h4>
+            <div class="chips">
+              <span class="chip" *ngFor="let s of coreStack">{{ s }}</span>
             </div>
-          </div>
+          </section>
+
+          <section>
+            <h4 class="col-title">Contact</h4>
+            <ul class="links">
+              <li>
+                <a [href]="'mailto:' + profile.email">
+                  <i class="pi pi-envelope" aria-hidden="true"></i> {{ profile.email }}
+                </a>
+              </li>
+              <li>
+                <a [href]="'tel:' + profile.phoneTel">
+                  <i class="pi pi-phone" aria-hidden="true"></i> {{ profile.phone }}
+                </a>
+              </li>
+              <li>
+                <span class="muted"><i class="pi pi-map-marker" aria-hidden="true"></i> {{ profile.location }}</span>
+              </li>
+            </ul>
+          </section>
         </div>
-        
+
         <div class="footer-bottom">
-          <p class="copyright">
-            © {{ currentYear }} Ankaj Kumar. All rights reserved.
-          </p>
-          <p class="built-with">
-            Built with Angular & PrimeNG
-          </p>
+          <p>© {{ year }} {{ profile.name }}. All rights reserved.</p>
+          <p class="muted">Built with Angular 16, PrimeNG, and a focus on accessibility.</p>
         </div>
       </div>
     </footer>
   `,
   styles: [`
     .footer {
-      background: var(--text-dark);
-      color: var(--bg-white);
-      padding: 3rem 0 1rem;
-      margin-top: 4rem;
+      background: var(--bg-dark);
+      color: #cbd5e1;
+      padding: clamp(2.5rem, 5vw, 4rem) 0 1.5rem;
+      margin-top: clamp(2rem, 5vw, 4rem);
     }
-    
-    .footer-content {
+    .footer-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 3rem;
-      margin-bottom: 2rem;
+      gap: clamp(1.5rem, 3vw, 2.5rem);
+      grid-template-columns: 2fr 1fr 1fr 1.2fr;
     }
-    
-    .footer-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-    }
-    
-    .footer-description {
-      color: var(--text-light);
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-    
-    .social-links {
+    .brand-title { color: #fff; margin-bottom: 0.4rem; font-size: 1.25rem; }
+    .brand-tagline { color: var(--primary-light); font-weight: 600; margin-bottom: 0.75rem; }
+    .brand-summary { color: #94a3b8; line-height: 1.6; margin-bottom: 1.25rem; max-width: 38ch; }
+
+    .social {
       display: flex;
-      gap: 1rem;
-    }
-    
-    .social-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: var(--primary-color);
-      color: white;
-      border-radius: 50%;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    
-    .social-link:hover {
-      background: var(--accent-color);
-      transform: translateY(-2px);
-    }
-    
-    .footer-subtitle {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--bg-white);
-    }
-    
-    .footer-links {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .footer-links li {
-      margin-bottom: 0.5rem;
-    }
-    
-    .footer-link {
-      color: var(--text-light);
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    
-    .footer-link:hover {
-      color: var(--primary-color);
-    }
-    
-    .skills-tags {
-      display: flex;
+      gap: 0.6rem;
       flex-wrap: wrap;
+    }
+    .social-link {
+      width: 44px; height: 44px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .social-link:hover { transform: translateY(-2px); background: var(--primary-color); }
+    .social-link.github:hover { background: #1f2937; }
+    .social-link.linkedin:hover { background: #0077b5; }
+    .social-link.leetcode:hover { background: #f89f1b; color: #000; }
+
+    .col-title {
+      color: #fff;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .links { list-style: none; padding: 0; margin: 0; }
+    .links li { margin-bottom: 0.5rem; }
+    .links a, .link-btn {
+      color: #94a3b8;
+      text-decoration: none;
+      background: none;
+      border: 0;
+      cursor: pointer;
+      padding: 0;
+      font: inherit;
+      transition: color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
       gap: 0.5rem;
     }
-    
-    .skill-tag {
-      background: var(--primary-color);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
+    .links a:hover, .link-btn:hover { color: var(--primary-light); }
+    .links i { color: var(--primary-light); }
+    .muted { color: #94a3b8; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip {
+      background: rgba(255,255,255,0.06);
+      color: #e2e8f0;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
     }
-    
+
     .footer-bottom {
-      border-top: 1px solid #374151;
-      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 2rem;
+      padding-top: 1.25rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-    }
-    
-    .copyright {
-      color: var(--text-light);
-      margin: 0;
-    }
-    
-    .built-with {
-      color: var(--text-light);
-      margin: 0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
       font-size: 0.875rem;
     }
-    
-    @media (max-width: 1024px) {
-      .footer-content {
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-      }
-      
-      .footer-section:first-child {
-        grid-column: 1 / -1;
-      }
+
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .brand { grid-column: 1 / -1; }
     }
-    
-    @media (max-width: 768px) {
-      .footer {
-        padding: 2rem 0 1rem;
-      }
-      
-      .footer-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      
-      .footer-title {
-        font-size: 1.25rem;
-      }
-      
-      .footer-description {
-        font-size: 0.9rem;
-      }
-      
-      .social-links {
-        justify-content: center;
-        gap: 0.75rem;
-      }
-      
-      .social-link {
-        width: 36px;
-        height: 36px;
-      }
-      
-      .skills-tags {
-        justify-content: center;
-        gap: 0.4rem;
-      }
-      
-      .skill-tag {
-        font-size: 0.8rem;
-        padding: 0.2rem 0.6rem;
-      }
-      
-      .footer-bottom {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-      }
-      
-      .footer-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-      }
-      
-      .footer-links li {
-        margin-bottom: 0;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .footer {
-        padding: 1.5rem 0 1rem;
-      }
-      
-      .footer-content {
-        gap: 1.5rem;
-      }
-      
-      .footer-title {
-        font-size: 1.125rem;
-      }
-      
-      .footer-description {
-        font-size: 0.85rem;
-        text-align: center;
-      }
-      
-      .social-links {
-        gap: 0.5rem;
-      }
-      
-      .social-link {
-        width: 32px;
-        height: 32px;
-      }
-      
-      .skills-tags {
-        gap: 0.3rem;
-      }
-      
-      .skill-tag {
-        font-size: 0.75rem;
-        padding: 0.15rem 0.5rem;
-      }
-      
-      .footer-links {
-        gap: 0.75rem;
-      }
+    @media (max-width: 560px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { justify-content: center; text-align: center; }
     }
   `]
 })
 export class FooterComponent {
-  currentYear = new Date().getFullYear();
+  readonly profile = PROFILE;
+  readonly resume = inject(ResumeService);
+  readonly year = new Date().getFullYear();
+  readonly coreStack = SKILL_GROUPS[1].skills.slice(0, 6);
 }

@@ -2,31 +2,64 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+  workflow_dispatch:
+
+# GitHub Pages needs these to publish from Actions
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Cancel in-flight deploys when a new commit lands
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '16'
-        
-    - name: Install dependencies
-      run: npm install --legacy-peer-deps
-      
-    - name: Build Angular app
-      run: npm run build
-      
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        publish_dir: ./dist/portfolio-website
-        exclude_assets: node_modules
-        cname: # optional, if you want to use a custom domain
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build (production)
+        run: npm run build:prod
+
+      # GitHub Pages serves static files only. For SPA routes to work on
+      # direct hits and refreshes, ship a 404.html that mirrors index.html —
+      # Angular's router then takes over client-side.
+      - name: Add SPA fallback (404.html)
+        run: cp dist/portfolio-website/index.html dist/portfolio-website/404.html
+
+      # GitHub Pages skips folders starting with "_"; nothing here uses Jekyll.
+      - name: Disable Jekyll
+        run: touch dist/portfolio-website/.nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/portfolio-website
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

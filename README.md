@@ -1,122 +1,77 @@
-# Ankaj Kumar - Portfolio Website
+# Ankaj Kumar — Portfolio
 
-A modern, responsive portfolio website built with Angular 18 and PrimeNG showcasing my professional experience, projects, and skills as a Frontend Developer.
+A fast, accessible, fully responsive portfolio for **Ankaj Kumar**, Frontend Engineer at InCred Financial Services.
+Built with Angular 16 standalone components + PrimeNG and a hand-rolled design system.
 
-## 🚀 Features
+## Highlights
 
-- **Modern Design**: Clean, professional design with smooth animations
-- **Responsive**: Fully responsive across all devices
-- **Fast Performance**: Optimized for speed and SEO
-- **Interactive**: Engaging user experience with PrimeNG components
-- **Accessible**: Built with accessibility best practices
+- **Real content** — sourced from my CV. No placeholder companies, fake certifications, or invented stats.
+- **Fully responsive** — fluid typography with `clamp()`, mobile hamburger nav, ≥44px touch targets, prefers-reduced-motion.
+- **Interactive** — typewriter hero, scroll-revealed sections (IntersectionObserver), animated count-up stats, project filter, copy-to-clipboard contact info, dark mode.
+- **Accessible** — skip-link, ARIA labels, focus-visible outlines, semantic landmarks, JSON-LD for SEO.
+- **Reusable layer** — shared `ResumeService`, `ThemeService`, `RevealOnScrollDirective`, `AnimateProgressDirective`, `CountUpDirective`.
 
-## 🛠️ Technologies Used
+## Tech stack
 
-- **Angular 18**: Latest version with standalone components
-- **PrimeNG**: UI component library for Angular
-- **TypeScript**: Type-safe JavaScript
-- **SCSS**: Advanced CSS with variables and mixins
-- **RxJS**: Reactive programming
-- **Angular Router**: Client-side routing
+| Layer        | Tools                                              |
+|--------------|----------------------------------------------------|
+| Framework    | Angular 16.2 (standalone components, lazy routes)  |
+| UI Library   | PrimeNG 16 (`lara-light-blue` theme)               |
+| Styling      | SCSS with CSS variables, `clamp()` typography      |
+| Routing      | `@angular/router` with in-memory scrolling         |
+| State        | Angular signals (`signal`, `effect`)               |
+| Forms        | Reactive forms with full validation                |
 
-## 📁 Project Structure
+## Project structure
 
 ```
 src/
 ├── app/
 │   ├── components/
-│   │   ├── header/          # Navigation header
-│   │   ├── footer/          # Site footer
-│   │   ├── home/            # Homepage with hero section
-│   │   ├── about/           # About page
-│   │   ├── experience/      # Professional experience
-│   │   ├── projects/        # Project showcase
-│   │   └── contact/         # Contact form and info
-│   ├── app.component.ts     # Main app component
-│   └── app.routes.ts        # Application routes
-├── styles.scss              # Global styles
-└── index.html              # Main HTML file
+│   │   ├── back-to-top/   – fixed scroll-to-top button
+│   │   ├── header/        – sticky nav, mobile drawer, theme toggle
+│   │   ├── footer/        – real social links + contact
+│   │   ├── home/          – hero, stats, core stack, featured work, CTA
+│   │   ├── about/         – intro, education, skills, "beyond code"
+│   │   ├── experience/    – InCred role with sections + timeline
+│   │   ├── projects/      – 4 production projects with filter + dialog
+│   │   └── contact/       – form + direct contact cards + FAQ
+│   ├── shared/
+│   │   ├── resume.data.ts                – single source of truth (CV content)
+│   │   ├── resume.service.ts             – opens hosted resume
+│   │   ├── theme.service.ts              – dark/light mode (persisted)
+│   │   ├── reveal-on-scroll.directive.ts – IntersectionObserver animations
+│   │   ├── animate-progress.directive.ts – width animation when in view
+│   │   └── count-up.directive.ts         – number counter when in view
+│   ├── app.component.ts
+│   └── app.routes.ts
+├── styles.scss            – design tokens, fluid typography, dark mode
+└── index.html             – SEO meta + JSON-LD + skip link
 ```
 
-## 🚀 Getting Started
+## Run locally
 
-### Prerequisites
-
-- Node.js (v18.13 or higher)
-- npm or yarn
-- Angular CLI
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/ankajkumar/portfolio.git
-cd portfolio
-```
-
-2. Install dependencies:
 ```bash
 npm install
+npm start          # http://localhost:4200
+npm run build:prod # production bundle in dist/
 ```
 
-3. Start the development server:
-```bash
-npm start
-```
+## Editing content
 
-4. Open your browser and navigate to `http://localhost:4200`
+All resume content lives in **one file**: `src/app/shared/resume.data.ts`. Update profile info, experience, projects,
+skills, education, and achievements there — every component pulls from it.
 
-## 📱 Pages
+## Deploy
 
-- **Home**: Hero section with skills overview and featured projects
-- **About**: Personal information, education, and technical skills
-- **Experience**: Professional experience timeline and achievements
-- **Projects**: Detailed project showcase with filtering
-- **Contact**: Contact form and social links
+The Angular build outputs to `dist/portfolio-website/`. `baseHref` is set to `/myPortFolio/` in `angular.json`
+for GitHub Pages — change it if you host elsewhere.
 
-## 🎨 Customization
-
-### Colors
-Update the CSS variables in `src/styles.scss`:
-```scss
-:root {
-  --primary-color: #2563eb;
-  --secondary-color: #64748b;
-  --accent-color: #f59e0b;
-  // ... other variables
-}
-```
-
-### Content
-Update the component data in each component file to match your information.
-
-## 🚀 Deployment
-
-### Build for Production
 ```bash
 npm run build:prod
+# upload dist/portfolio-website/ to your host
 ```
 
-### Deploy to GitHub Pages
-```bash
-ng build --prod --base-href="https://yourusername.github.io/portfolio/"
-npx angular-cli-ghpages --dir=dist/portfolio-website
-```
+## License
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](../../issues).
-
-## 📞 Contact
-
-- **Email**: ankajkumar@email.com
-- **LinkedIn**: [linkedin.com/in/ankajkumar](https://linkedin.com/in/ankajkumar)
-- **GitHub**: [github.com/ankajkumar](https://github.com/ankajkumar)
-
----
-
-Built with ❤️ by Ankaj Kumar
+Personal portfolio — no permissive license. Feel free to take inspiration, but please don't reuse the personal content.

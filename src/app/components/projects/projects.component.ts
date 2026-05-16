@@ -1,1085 +1,365 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { ChipModule } from 'primeng/chip';
-import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
-import { GalleriaModule } from 'primeng/galleria';
+import { PROJECTS, PROJECT_CATEGORIES } from '../../shared/resume.data';
+import { ResumeService } from '../../shared/resume.service';
+import { RevealOnScrollDirective } from '../../shared/reveal-on-scroll.directive';
+
+type Project = (typeof PROJECTS)[number];
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, CardModule, ButtonModule, ChipModule, TagModule, DialogModule, GalleriaModule],
+  imports: [CommonModule, DialogModule, RevealOnScrollDirective],
   template: `
-    <div class="projects-container">
-      <div class="container">
-        <!-- Projects Header -->
-        <section class="projects-header">
-          <h1 class="page-title">Featured Projects</h1>
-          <p class="page-subtitle">
-            A showcase of my recent work and side projects, highlighting my expertise in 
-            Angular, JavaScript, PrimeNG, and modern web technologies.
-          </p>
-        </section>
-
-        <!-- Project Categories -->
-        <section class="project-categories">
-          <div class="category-filters">
-            <p-button 
-              *ngFor="let category of categories" 
-              [label]="category.name" 
-              [outlined]="selectedCategory !== category.value"
-              [class]="selectedCategory === category.value ? 'p-button-primary' : ''"
-              (onClick)="filterProjects(category.value)"
-              class="filter-btn">
-            </p-button>
-          </div>
-        </section>
-
-        <!-- Projects Grid -->
-        <section class="projects-grid">
-          <div class="project-card" *ngFor="let project of filteredProjects">
-            <p-card class="project-card-content">
-              <ng-template pTemplate="header">
-                <div class="project-image" (click)="showProjectDetails(project)">
-                  <i [class]="project.icon" class="project-icon"></i>
-                </div>
-              </ng-template>
-              <ng-template pTemplate="content">
-                <div class="project-content">
-                  <div class="project-header">
-                    <h3 class="project-title">{{ project.title }}</h3>
-                    <p-tag 
-                      [value]="project.status" 
-                      [severity]="project.status === 'Live' ? 'success' : project.status === 'In Progress' ? 'warn' : 'info'">
-                    </p-tag>
-                  </div>
-                  
-                  <p class="project-description">{{ project.description }}</p>
-                  
-                  <div class="project-features">
-                    <h4>Key Features:</h4>
-                    <ul>
-                      <li *ngFor="let feature of project.features">{{ feature }}</li>
-                    </ul>
-                  </div>
-                  
-                  <div class="project-technologies">
-                    <p-chip 
-                      *ngFor="let tech of project.technologies" 
-                      [label]="tech" 
-                      [style]="getTechStyle(tech)">
-                    </p-chip>
-                  </div>
-                  
-                  <div class="project-actions">
-                    <p-button 
-                      *ngIf="project.liveUrl" 
-                      [label]="'Live Demo'" 
-                      icon="pi pi-external-link" 
-                      [outlined]="true"
-                      size="small"
-                      (onClick)="openUrl(project.liveUrl)"
-                      class="action-btn">
-                    </p-button>
-                    <p-button 
-                      *ngIf="project.githubUrl" 
-                      [label]="'GitHub'" 
-                      icon="pi pi-github" 
-                      [outlined]="true"
-                      size="small"
-                      (onClick)="openUrl(project.githubUrl)"
-                      class="action-btn">
-                    </p-button>
-                    <p-button 
-                      [label]="'View Details'" 
-                      icon="pi pi-info-circle" 
-                      [outlined]="true"
-                      size="small"
-                      (onClick)="showProjectDetails(project)"
-                      class="action-btn">
-                    </p-button>
-                  </div>
-                </div>
-              </ng-template>
-            </p-card>
-          </div>
-        </section>
-
-        <!-- Project Details Dialog -->
-        <p-dialog 
-          [(visible)]="showDetailsDialog" 
-          [modal]="true" 
-          [style]="{width: '90vw', maxWidth: '800px', maxHeight: '90vh'}"
-          [closable]="true"
-          header="Project Details"
-          [styleClass]="'project-modal'">
-          <div class="project-details" *ngIf="selectedProject">
-            <div class="details-header">
-              <div class="project-info">
-                <h2>{{ selectedProject.title }}</h2>
-                <p class="project-category">{{ selectedProject.category }}</p>
-                <p-tag 
-                  [value]="selectedProject.status" 
-                  [severity]="selectedProject.status === 'Live' ? 'success' : selectedProject.status === 'In Progress' ? 'warn' : 'info'">
-                </p-tag>
-              </div>
-            </div>
-            
-            <div class="details-content">
-              <div class="details-section">
-                <h3>Project Overview</h3>
-                <p>{{ selectedProject.fullDescription }}</p>
-              </div>
-              
-              <div class="details-section">
-                <h3>Technologies Used</h3>
-                <div class="tech-list">
-                  <p-chip 
-                    *ngFor="let tech of selectedProject.technologies" 
-                    [label]="tech" 
-                    [style]="getTechStyle(tech)">
-                  </p-chip>
-                </div>
-              </div>
-              
-              <div class="details-section">
-                <h3>Key Features</h3>
-                <ul class="features-list">
-                  <li *ngFor="let feature of selectedProject.features">{{ feature }}</li>
-                </ul>
-              </div>
-              
-              <div class="details-section" *ngIf="selectedProject.challenges">
-                <h3>Challenges & Solutions</h3>
-                <div class="challenges">
-                  <div class="challenge-item" *ngFor="let challenge of selectedProject.challenges">
-                    <h4>{{ challenge.challenge }}</h4>
-                    <p>{{ challenge.solution }}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="details-section">
-                <h3>Project Links</h3>
-                <div class="project-links">
-                  <p-button 
-                    *ngIf="selectedProject.liveUrl" 
-                    [label]="'Live Demo'" 
-                    icon="pi pi-external-link" 
-                    [outlined]="true"
-                    (onClick)="openUrl(selectedProject.liveUrl)"
-                    class="link-btn">
-                  </p-button>
-                  <p-button 
-                    *ngIf="selectedProject.githubUrl" 
-                    [label]="'GitHub Repository'" 
-                    icon="pi pi-github" 
-                    [outlined]="true"
-                    (onClick)="openUrl(selectedProject.githubUrl)"
-                    class="link-btn">
-                  </p-button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </p-dialog>
+    <!-- Header -->
+    <section class="header section">
+      <div class="container" appReveal>
+        <p class="kicker">Projects</p>
+        <h1>Production work I've owned at InCred.</h1>
+        <p class="lede">
+          Four projects that ship together: two Angular 18 portals, one authentication library, and the NestJS BFF
+          that orchestrates the microservices behind them.
+        </p>
       </div>
-    </div>
+    </section>
+
+    <!-- Filter -->
+    <section class="filter-bar" appReveal>
+      <div class="container">
+        <div class="filters" role="tablist" aria-label="Project category filter">
+          <button *ngFor="let c of categories"
+                  type="button"
+                  role="tab"
+                  [attr.aria-selected]="selectedCategory() === c.value"
+                  class="filter-chip"
+                  [class.active]="selectedCategory() === c.value"
+                  (click)="selectedCategory.set(c.value)">
+            {{ c.name }}
+            <span class="count">{{ countFor(c.value) }}</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid -->
+    <section class="grid-section section">
+      <div class="container">
+        <div class="grid">
+          <article class="card"
+                   *ngFor="let p of filtered(); let i = index; trackBy: trackByTitle"
+                   appReveal
+                   [revealDelay]="i * 80">
+            <div class="card-head">
+              <span class="icon"><i [class]="p.icon" aria-hidden="true"></i></span>
+              <span class="status">{{ p.status }}</span>
+            </div>
+
+            <h2 class="title">{{ p.title }}</h2>
+            <p class="role">{{ p.role }}</p>
+            <p class="desc">{{ p.description }}</p>
+
+            <ul class="tech">
+              <li *ngFor="let t of p.technologies">{{ t }}</li>
+            </ul>
+
+            <div class="actions">
+              <a class="btn ghost" [href]="p.githubUrl" target="_blank" rel="noopener" *ngIf="p.githubUrl">
+                <i class="pi pi-github" aria-hidden="true"></i> Source
+              </a>
+              <button type="button" class="btn primary" (click)="openDetails(p)">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> Details
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <div class="empty" *ngIf="!filtered().length" appReveal>
+          <i class="pi pi-info-circle" aria-hidden="true"></i>
+          <p>No projects in this category yet — check back soon.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Details dialog -->
+    <p-dialog
+      [(visible)]="dialogVisible"
+      [modal]="true"
+      [draggable]="false"
+      [dismissableMask]="true"
+      [closable]="true"
+      [style]="{ width: 'min(92vw, 720px)' }"
+      [breakpoints]="{ '720px': '95vw' }"
+      [header]="active()?.title || 'Project details'"
+      styleClass="project-modal">
+      <ng-container *ngIf="active() as p">
+        <div class="dialog-meta">
+          <span class="status">{{ p.status }}</span>
+          <span class="role">{{ p.role }}</span>
+        </div>
+
+        <h3>Overview</h3>
+        <p>{{ p.fullDescription }}</p>
+
+        <h3>Key features</h3>
+        <ul class="features">
+          <li *ngFor="let f of p.features">
+            <i class="pi pi-check" aria-hidden="true"></i>
+            <span>{{ f }}</span>
+          </li>
+        </ul>
+
+        <h3>Stack</h3>
+        <ul class="tech">
+          <li *ngFor="let t of p.technologies">{{ t }}</li>
+        </ul>
+
+        <div class="dialog-actions" *ngIf="p.githubUrl">
+          <a class="btn primary" [href]="p.githubUrl" target="_blank" rel="noopener">
+            <i class="pi pi-github" aria-hidden="true"></i> View on GitHub
+          </a>
+        </div>
+      </ng-container>
+    </p-dialog>
   `,
   styles: [`
-    .projects-container {
-      padding: 2rem 0;
-    }
-    
-    .projects-header {
-      text-align: center;
-      padding: 4rem 0;
-      background: var(--bg-white);
-    }
-    
-    .page-title {
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 1rem;
-    }
-    
-    .page-subtitle {
-      font-size: 1.25rem;
-      color: var(--text-light);
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    
-    .project-categories {
-      padding: 2rem 0;
-      background: var(--bg-light);
-    }
-    
-    .category-filters {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    
-    .filter-btn {
-      border-radius: 20px;
-      padding: 0.5rem 1.5rem;
-    }
-    
-    .projects-grid {
-      padding: 4rem 0;
-      background: var(--bg-white);
-    }
-    
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 2rem;
-    }
-    
-    .project-card-content {
-      border-radius: 12px;
-      box-shadow: var(--shadow-md);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      height: 100%;
-    }
-    
-    .project-card-content:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
-    }
-    
-    .project-image {
-      position: relative;
-      height: 200px;
-      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px 12px 0 0;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .project-image:hover {
-      transform: scale(1.02);
-      box-shadow: var(--shadow-lg);
-    }
-    
-    .project-icon {
-      font-size: 4rem;
-      color: white;
-    }
-    
-    .project-content {
-      padding: 1.5rem;
-    }
-    
-    .project-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-    
-    .project-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin: 0;
-    }
-    
-    .project-description {
-      color: var(--text-light);
-      margin-bottom: 1rem;
-      line-height: 1.6;
-    }
-    
-    .project-features {
-      margin-bottom: 1.5rem;
-    }
-    
-    .project-features h4 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--text-dark);
-    }
-    
-    .project-features ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .project-features li {
-      padding: 0.25rem 0;
-      color: var(--text-light);
-      position: relative;
-      padding-left: 1rem;
-      font-size: 0.875rem;
-    }
-    
-    .project-features li::before {
-      content: '•';
-      position: absolute;
-      left: 0;
-      color: var(--primary-color);
-    }
-    
-    .project-technologies {
-      margin-bottom: 1.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    
-    .project-actions {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    
-    .action-btn {
-      font-size: 0.875rem;
-    }
-    
-    .project-details {
-      padding: 0 0 0 1rem;
-      max-height: 70vh;
-      overflow-y: auto;
-    }
-    
-    .details-header {
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid var(--border-light);
-      background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-white) 100%);
-      padding: 1.5rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-    }
-    
-    .details-header h2 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 0.5rem;
-      line-height: 1.2;
-    }
-    
-    .project-category {
-      color: var(--text-light);
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-      font-weight: 500;
-    }
-    
-    .details-content {
-      padding: 0 1.5rem 1.5rem;
-    }
-    
-    .details-section {
-      margin-bottom: 2.5rem;
-      background: var(--bg-white);
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border-light);
-    }
-    
-    .details-section h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--primary-color);
+    .kicker {
       display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
     }
-    
-    .details-section p {
-      color: var(--text-light);
-      line-height: 1.7;
-      font-size: 1rem;
+    .header {
+      background:
+        radial-gradient(60% 80% at 90% 20%, color-mix(in srgb, var(--primary-color) 12%, transparent), transparent 60%),
+        var(--bg-primary);
+      padding-bottom: 1.5rem;
     }
-    
-    .tech-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1rem;
+    .header h1 {
+      font-size: clamp(2rem, 4vw + 1rem, 3.25rem);
+      max-width: 26ch;
+      margin-bottom: 1rem;
     }
-    
-    .features-list {
-      list-style: none;
-      padding: 0;
-      margin-top: 1rem;
-    }
-    
-    .features-list li {
+    .lede { color: var(--text-light); max-width: 60ch; font-size: clamp(1rem, 0.5vw + 0.875rem, 1.125rem); }
+
+    /* Filters */
+    .filter-bar {
+      position: sticky;
+      top: calc(var(--header-height) - 1px);
+      z-index: 50;
+      background: color-mix(in srgb, var(--bg-primary) 92%, transparent);
+      backdrop-filter: blur(10px);
       padding: 0.75rem 0;
-      color: var(--text-light);
-      position: relative;
-      padding-left: 2rem;
-      font-size: 1rem;
-      line-height: 1.5;
       border-bottom: 1px solid var(--border-light);
     }
-    
-    .features-list li:last-child {
-      border-bottom: none;
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      overflow-x: auto;
     }
-    
-    .features-list li::before {
-      content: '✓';
-      position: absolute;
-      left: 0;
-      color: var(--primary-color);
-      font-weight: bold;
-      font-size: 1.1rem;
-      top: 0.75rem;
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-primary);
+      color: var(--text-medium);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      min-height: 40px;
+      white-space: nowrap;
     }
-    
-    .challenges {
+    .filter-chip:hover { border-color: var(--primary-color); color: var(--primary-color); }
+    .filter-chip.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: #fff;
+      border-color: transparent;
+    }
+    .filter-chip .count {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      color: inherit;
+    }
+    .filter-chip:not(.active) .count {
+      background: var(--bg-secondary);
+      color: var(--text-light);
+    }
+
+    /* Grid */
+    .grid-section { background: var(--bg-secondary); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(1rem, 2vw, 1.5rem);
+    }
+    .card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      margin-top: 1rem;
+      gap: 0.5rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
-    
-    .challenge-item {
-      background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-white) 100%);
-      padding: 1.5rem;
-      border-radius: 12px;
-      border-left: 4px solid var(--primary-color);
-      box-shadow: var(--shadow-sm);
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: color-mix(in srgb, var(--primary-color) 35%, var(--border-light));
     }
-    
-    .challenge-item h4 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 0.75rem;
-    }
-    
-    .challenge-item p {
-      color: var(--text-light);
-      margin: 0;
-      line-height: 1.6;
-    }
-    
-    .project-links {
+    .card-head {
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
     }
-    
-    .link-btn {
-      font-size: 0.9rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 500;
+    .icon {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
     }
-    
-    /* Dark theme styles */
-    .dark-theme .details-header {
-      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    .status {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.25rem 0.6rem; border-radius: 999px;
+      background: color-mix(in srgb, #10b981 14%, transparent);
+      color: #047857;
     }
-    
-    .dark-theme .details-section {
+    .title { font-size: 1.15rem; margin-bottom: 0.1rem; }
+    .role { color: var(--primary-color); font-weight: 600; font-size: 0.8rem; margin-bottom: 0.4rem; }
+    .desc { color: var(--text-light); font-size: 0.95rem; flex-grow: 1; }
+    .tech {
+      list-style: none; padding: 0;
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+      margin: 0.5rem 0;
+    }
+    .tech li {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
       background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: 999px;
+      color: var(--text-medium);
+    }
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: auto; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      min-height: 40px;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: #fff;
+    }
+    .btn.primary:hover { transform: translateY(-2px); }
+    .btn.ghost {
+      background: var(--bg-secondary);
+      color: var(--text-dark);
       border-color: var(--border-light);
     }
-    
-    .dark-theme .challenge-item {
-      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    .btn.ghost:hover { background: var(--bg-tertiary); color: var(--primary-color); }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-light);
     }
-    
-    /* Modal styling to fix double scrollbar */
+    .empty i { font-size: 2rem; color: var(--primary-color); display: block; margin-bottom: 0.5rem; }
+
+    /* Dialog */
+    .dialog-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .dialog-meta .role {
+      color: var(--text-light); font-weight: 500; font-size: 0.875rem;
+    }
+    .features {
+      list-style: none; padding: 0;
+      display: grid; gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .features li {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      color: var(--text-medium);
+    }
+    .features i {
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+      color: var(--primary-color);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      margin-top: 0.2rem;
+      flex-shrink: 0;
+    }
+    .dialog-actions { margin-top: 1rem; }
+
     :host ::ng-deep .project-modal .p-dialog-content {
-      padding: 0;
-      overflow: hidden;
+      padding: 1.25rem 1.5rem 1.5rem;
     }
-    
-    :host ::ng-deep .project-modal .p-dialog {
-      overflow: hidden;
-    }
-    
     :host ::ng-deep .project-modal .p-dialog-header {
-      padding: 1.5rem 1.5rem 1rem 1.5rem;
-      border-bottom: 2px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
     }
-    
-    :host ::ng-deep .project-modal .p-dialog-header .p-dialog-title {
-      font-size: 1.5rem;
+    :host ::ng-deep .project-modal .p-dialog-title {
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--text-dark);
-      margin: 0;
-    }
-    
-    /* Dark theme for modal */
-    .dark-theme :host ::ng-deep .project-modal .p-dialog-header {
-      background: var(--bg-secondary);
-      border-bottom-color: var(--border-light);
-    }
-    
-    .dark-theme :host ::ng-deep .project-modal .p-dialog-header .p-dialog-title {
-      color: var(--text-dark);
-    }
-    
-    @media (max-width: 1024px) {
-      .projects-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-      }
-      
-      .project-card {
-        margin-bottom: 2rem;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .page-title {
-        font-size: 2.25rem;
-      }
-      
-      .page-subtitle {
-        font-size: 1rem;
-      }
-      
-      .projects-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      
-      .category-filters {
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-bottom: 1rem;
-        gap: 0.75rem;
-      }
-      
-      .category-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        white-space: nowrap;
-      }
-      
-      .project-card {
-        margin-bottom: 1.5rem;
-        padding: 1.5rem;
-      }
-      
-      .project-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-      }
-      
-      .project-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.25rem;
-      }
-      
-      .project-title {
-        font-size: 1.25rem;
-      }
-      
-      .project-description {
-        font-size: 0.9rem;
-      }
-      
-      .project-tech {
-        justify-content: center;
-        gap: 0.5rem;
-      }
-      
-      .project-actions {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .project-links {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      
-      .view-btn, .link-btn {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        font-size: 0.875rem;
-      }
-      
-      /* Modal responsive styles */
-      .project-details {
-        max-height: 80vh;
-        padding: 0 0 0 0.75rem;
-      }
-      
-      /* Mobile modal header */
-      :host ::ng-deep .project-modal .p-dialog-header {
-        padding: 1rem 1rem 0.75rem 1rem;
-      }
-      
-      :host ::ng-deep .project-modal .p-dialog-header .p-dialog-title {
-        font-size: 1.25rem;
-      }
-      
-      .details-header {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      
-      .details-header h2 {
-        font-size: 1.5rem;
-        line-height: 1.3;
-      }
-      
-      .project-category {
-        font-size: 1rem;
-      }
-      
-      .details-content {
-        padding: 0 1rem 1rem;
-      }
-      
-      .details-section {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      
-      .details-section h3 {
-        font-size: 1.1rem;
-        margin-bottom: 0.75rem;
-      }
-      
-      .details-section p {
-        font-size: 0.9rem;
-        line-height: 1.6;
-      }
-      
-      .tech-list {
-        gap: 0.5rem;
-        margin-top: 0.75rem;
-      }
-      
-      .features-list li {
-        padding: 0.5rem 0;
-        font-size: 0.9rem;
-        padding-left: 1.5rem;
-      }
-      
-      .features-list li::before {
-        font-size: 1rem;
-        top: 0.5rem;
-      }
-      
-      .challenge-item {
-        padding: 1rem;
-        margin-bottom: 1rem;
-      }
-      
-      .challenge-item h4 {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .challenge-item p {
-        font-size: 0.9rem;
-        line-height: 1.5;
-      }
-      
-      .project-links {
-        flex-direction: column;
-        gap: 0.75rem;
-        margin-top: 0.75rem;
-      }
-      
-      .link-btn {
-        width: 100%;
-        font-size: 0.85rem;
-        padding: 0.75rem 1rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .page-title {
-        font-size: 1.875rem;
-      }
-      
-      .page-subtitle {
-        font-size: 0.9rem;
-      }
-      
-      .projects-grid {
-        gap: 1rem;
-      }
-      
-      .project-card {
-        padding: 1.25rem;
-      }
-      
-      .project-icon {
-        width: 45px;
-        height: 45px;
-        font-size: 1.125rem;
-      }
-      
-      .project-title {
-        font-size: 1.125rem;
-      }
-      
-      .project-description {
-        font-size: 0.85rem;
-      }
-      
-      .project-tech {
-        gap: 0.4rem;
-      }
-      
-      .view-btn, .link-btn {
-        padding: 0.625rem 0.875rem;
-        font-size: 0.8rem;
-      }
-      
-      /* Mobile modal styles */
-      .project-details {
-        max-height: 85vh;
-        padding: 0 0 0 0.5rem;
-      }
-      
-      /* Small mobile modal header */
-      :host ::ng-deep .project-modal .p-dialog-header {
-        padding: 0.75rem 0.75rem 0.5rem 0.75rem;
-      }
-      
-      :host ::ng-deep .project-modal .p-dialog-header .p-dialog-title {
-        font-size: 1.1rem;
-      }
-      
-      .details-header {
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-      }
-      
-      .details-header h2 {
-        font-size: 1.25rem;
-        line-height: 1.2;
-      }
-      
-      .project-category {
-        font-size: 0.9rem;
-      }
-      
-      .details-content {
-        padding: 0 0.75rem 0.75rem;
-      }
-      
-      .details-section {
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-      }
-      
-      .details-section h3 {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .details-section p {
-        font-size: 0.85rem;
-        line-height: 1.5;
-      }
-      
-      .tech-list {
-        gap: 0.4rem;
-        margin-top: 0.5rem;
-      }
-      
-      .features-list li {
-        padding: 0.4rem 0;
-        font-size: 0.85rem;
-        padding-left: 1.25rem;
-      }
-      
-      .features-list li::before {
-        font-size: 0.9rem;
-        top: 0.4rem;
-      }
-      
-      .challenge-item {
-        padding: 0.75rem;
-        margin-bottom: 0.75rem;
-      }
-      
-      .challenge-item h4 {
-        font-size: 0.9rem;
-        margin-bottom: 0.4rem;
-      }
-      
-      .challenge-item p {
-        font-size: 0.8rem;
-        line-height: 1.4;
-      }
-      
-      .project-links {
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-      }
-      
-      .link-btn {
-        font-size: 0.8rem;
-        padding: 0.6rem 0.8rem;
-      }
     }
   `]
 })
 export class ProjectsComponent {
-  selectedCategory = 'all';
-  showDetailsDialog = false;
-  selectedProject: any = null;
+  readonly projects = PROJECTS;
+  readonly categories = PROJECT_CATEGORIES;
+  readonly resume = inject(ResumeService);
 
-  categories = [
-    { name: 'All Projects', value: 'all' },
-    { name: 'Angular', value: 'angular' },
-    { name: 'React', value: 'react' },
-    { name: 'Node.js', value: 'nodejs' },
-    { name: 'Full Stack', value: 'fullstack' }
-  ];
+  selectedCategory = signal('all');
+  active = signal<Project | null>(null);
+  dialogVisible = false;
 
-  projects = [
-    {
-      title: 'Connector Onboarding Portal',
-      category: 'angular',
-      status: 'Live',
-      description: 'Comprehensive onboarding solution for financial services with integrated authentication systems.',
-      fullDescription: 'A sophisticated onboarding portal that streamlines the process of connecting new users to financial services. The application integrates multiple third-party services including DigiLocker, Digio, and eSign to provide a seamless user experience.',
-      icon: 'pi pi-users',
-      features: [
-        'SSO Authentication Integration',
-        'DigiLocker Document Verification',
-        'Digio Digital Signature',
-        'eSign Integration',
-        'OTP-based Login System',
-        'Real-time Status Updates'
-      ],
-      technologies: ['Angular', 'PrimeNG', 'TypeScript', 'RxJS', 'REST API', 'SSO'],
-      liveUrl: 'https://example.com/onboarding',
-      githubUrl: null,
-      challenges: [
-        {
-          challenge: 'Integrating multiple third-party services',
-          solution: 'Created a unified service layer to handle all external API calls with proper error handling and retry mechanisms.'
-        },
-        {
-          challenge: 'Managing complex authentication flows',
-          solution: 'Implemented a state machine pattern to handle different authentication states and user journeys.'
-        }
-      ]
-    },
-    {
-      title: 'Wealth Transaction Portal',
-      category: 'angular',
-      status: 'Live',
-      description: 'Financial transaction management system with UAM portal integration and real-time processing.',
-      fullDescription: 'A comprehensive wealth management platform that handles various financial transactions with integrated UAM (User Access Management) portal for secure access control and transaction monitoring.',
-      icon: 'pi pi-chart-line',
-      features: [
-        'Real-time Transaction Processing',
-        'UAM Portal Integration',
-        'Transaction History & Analytics',
-        'Secure Payment Gateway',
-        'Multi-currency Support',
-        'Audit Trail & Compliance'
-      ],
-      technologies: ['Angular', 'JavaScript', 'PrimeNG', 'Node.js', 'MongoDB', 'WebSocket'],
-      liveUrl: 'https://example.com/wealth-portal',
-      githubUrl: null,
-      challenges: [
-        {
-          challenge: 'Real-time data synchronization',
-          solution: 'Implemented WebSocket connections with fallback to polling for reliable real-time updates.'
-        },
-        {
-          challenge: 'Complex transaction workflows',
-          solution: 'Created a workflow engine using state machines to handle different transaction types and approval processes.'
-        }
-      ]
-    },
-    {
-      title: 'Private NPM Package - Auth Library',
-      category: 'nodejs',
-      status: 'Live',
-      description: 'Custom authentication and authorization package for SSO integration across multiple applications.',
-      fullDescription: 'A comprehensive authentication library built as a private NPM package that provides SSO capabilities, JWT token management, and role-based access control for multiple applications within the organization.',
-      icon: 'pi pi-shield',
-      features: [
-        'SSO Authentication',
-        'JWT Token Management',
-        'Role-based Access Control',
-        'Multi-tenant Support',
-        'Session Management',
-        'Security Middleware'
-      ],
-      technologies: ['Node.js', 'TypeScript', 'JWT', 'Express', 'NPM', 'OAuth2'],
-      liveUrl: null,
-      githubUrl: 'https://github.com/ankajkumar/auth-library',
-      challenges: [
-        {
-          challenge: 'Cross-application compatibility',
-          solution: 'Designed a flexible API that works with different frontend frameworks and backend technologies.'
-        },
-        {
-          challenge: 'Security and token management',
-          solution: 'Implemented secure token storage, automatic refresh, and proper token validation mechanisms.'
-        }
-      ]
-    },
-    {
-      title: 'E-commerce Dashboard',
-      category: 'react',
-      status: 'In Progress',
-      description: 'Modern e-commerce analytics dashboard built with React and modern data visualization libraries.',
-      fullDescription: 'A comprehensive analytics dashboard for e-commerce businesses featuring real-time sales data, customer analytics, inventory management, and predictive insights using machine learning algorithms.',
-      icon: 'pi pi-shopping-cart',
-      features: [
-        'Real-time Analytics',
-        'Sales Performance Tracking',
-        'Customer Behavior Analysis',
-        'Inventory Management',
-        'Predictive Insights',
-        'Custom Reports'
-      ],
-      technologies: ['React', 'TypeScript', 'Chart.js', 'Node.js', 'PostgreSQL', 'Redis'],
-      liveUrl: null,
-      githubUrl: 'https://github.com/ankajkumar/ecommerce-dashboard',
-      challenges: [
-        {
-          challenge: 'Large dataset performance',
-          solution: 'Implemented data virtualization and pagination to handle millions of records efficiently.'
-        },
-        {
-          challenge: 'Real-time data updates',
-          solution: 'Used WebSocket connections with Redis pub/sub for real-time data synchronization.'
-        }
-      ]
-    },
-    {
-      title: 'Task Management API',
-      category: 'nodejs',
-      status: 'Live',
-      description: 'RESTful API for task management with advanced features like collaboration and time tracking.',
-      fullDescription: 'A robust RESTful API built with Node.js and Express that provides comprehensive task management capabilities including team collaboration, time tracking, file attachments, and advanced filtering options.',
-      icon: 'pi pi-check-square',
-      features: [
-        'Task CRUD Operations',
-        'Team Collaboration',
-        'Time Tracking',
-        'File Attachments',
-        'Advanced Filtering',
-        'Email Notifications'
-      ],
-      technologies: ['Node.js', 'Express', 'MongoDB', 'JWT', 'Multer', 'Nodemailer'],
-      liveUrl: 'https://api.example.com/tasks',
-      githubUrl: 'https://github.com/ankajkumar/task-api',
-      challenges: [
-        {
-          challenge: 'File upload handling',
-          solution: 'Implemented secure file upload with virus scanning and size limits using Multer and ClamAV.'
-        },
-        {
-          challenge: 'Real-time notifications',
-          solution: 'Used Socket.io for real-time updates and email notifications for important events.'
-        }
-      ]
-    },
-    {
-      title: 'Portfolio Website',
-      category: 'angular',
-      status: 'Live',
-      description: 'Personal portfolio website showcasing projects and skills, built with Angular and PrimeNG.',
-      fullDescription: 'A modern, responsive portfolio website built with Angular 18 and PrimeNG that showcases my professional experience, projects, and skills. Features include smooth animations, responsive design, and optimized performance.',
-      icon: 'pi pi-user',
-      features: [
-        'Responsive Design',
-        'Smooth Animations',
-        'Project Showcase',
-        'Contact Form',
-        'SEO Optimized',
-        'Performance Optimized'
-      ],
-      technologies: ['Angular', 'PrimeNG', 'TypeScript', 'SCSS', 'RxJS', 'Angular CLI'],
-      liveUrl: 'https://ankajkumar.dev',
-      githubUrl: 'https://github.com/ankajkumar/portfolio',
-      challenges: [
-        {
-          challenge: 'Performance optimization',
-          solution: 'Implemented lazy loading, OnPush change detection, and optimized bundle size for fast loading.'
-        },
-        {
-          challenge: 'SEO and accessibility',
-          solution: 'Added proper meta tags, semantic HTML, and ARIA attributes for better SEO and accessibility.'
-        }
-      ]
-    }
-  ];
+  filtered = computed(() => {
+    const cat = this.selectedCategory();
+    return cat === 'all' ? this.projects : this.projects.filter(p => p.category === cat);
+  });
 
-  get filteredProjects() {
-    if (this.selectedCategory === 'all') {
-      return this.projects;
-    }
-    return this.projects.filter(project => project.category === this.selectedCategory);
+  countFor(value: string): number {
+    return value === 'all'
+      ? this.projects.length
+      : this.projects.filter(p => p.category === value).length;
   }
 
-  filterProjects(category: string) {
-    this.selectedCategory = category;
+  openDetails(p: Project) {
+    this.active.set(p);
+    this.dialogVisible = true;
   }
 
-  showProjectDetails(project: any) {
-    this.selectedProject = project;
-    this.showDetailsDialog = true;
-  }
-
-  openUrl(url: string) {
-    if (url) {
-      window.open(url, '_blank');
-    }
-  }
-
-  getTechStyle(tech: string): any {
-    const techColors: { [key: string]: string } = {
-      'Angular': '#dd0031',
-      'React': '#61dafb',
-      'Node.js': '#339933',
-      'TypeScript': '#3178c6',
-      'JavaScript': '#f7df1e',
-      'PrimeNG': '#007ad9',
-      'Python': '#3776ab',
-      'Java': '#007396',
-      'MongoDB': '#47a248',
-      'PostgreSQL': '#336791',
-      'Redis': '#dc382d',
-      'JWT': '#000000',
-      'REST API': '#6f42c1',
-      'SSO': '#28a745',
-      'WebSocket': '#ff6b6b',
-      'Express': '#000000',
-      'RxJS': '#b7178c',
-      'SCSS': '#cf649a',
-      'HTML': '#e34f26',
-      'CSS': '#1572b6'
-    };
-
-    const color = techColors[tech] || '#64748b';
-    return {
-      'background-color': color,
-      'color': color === '#f7df1e' || color === '#61dafb' ? 'black' : 'white'
-    };
+  trackByTitle(_: number, p: Project) {
+    return p.title;
   }
 }
